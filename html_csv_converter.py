@@ -15,30 +15,35 @@ articles_html = listdir(path_to_data)
 
 #%%
 def get_key_words(html_file):
-    start_idx = html_file.find('name="keywords" content="') + len('name="keywords" content="')
+    search_string = 'name="keywords" content="'
+    start_idx = html_file.find(search_string) + len(search_string)
     end_idx = html_file.find('" />', start_idx)
     return html_file[start_idx:end_idx].split(",")
 
 
 def get_title(html_file):
-    start_idx = html_file.find('name="analyticsAttributes.title" content="') + len('name="analyticsAttributes.title" content="')
+    search_string = 'name="analyticsAttributes.title" content="'
+    start_idx = html_file.find(search_string) + len(search_string)
     end_idx = html_file.find('" />', start_idx)
     return html_file[start_idx:end_idx].replace("&#039;", "'")
 
 
 def get_article_date_time(html_file):
-    start_idx = html_file.find('name="analyticsAttributes.articleDate" content="') + len('name="analyticsAttributes.articleDate" content="')
+    search_string = 'name="analyticsAttributes.articleDate" content="'
+    start_idx = html_file.find(search_string) + len(search_string)
     end_idx = html_file.find('" />', start_idx)
     return pd.to_datetime(html_file[start_idx:end_idx])
 
 
 def get_main_author(html_file):
-    start_idx = html_file.find('name="Author" content="') + len('name="Author" content="')
+    search_string = 'name="Author" content="'
+    start_idx = html_file.find(search_string) + len(search_string)
     end_idx = html_file.find('">', start_idx)
     return html_file[start_idx:end_idx]
 
 def get_reporters_writers_and_editors(html_file):
-    start_idx = html_file.find('<p class="Attribution_content">') + len('<p class="Attribution_content">')
+    search_string = '<p class="Attribution_content">'
+    start_idx = html_file.find(search_string) + len(search_string)
     end_idx = html_file.find('</p>', start_idx)
     substrings = html_file[start_idx:end_idx].split(";")
     reporters = []
