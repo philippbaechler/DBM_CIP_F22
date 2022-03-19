@@ -45,15 +45,17 @@ def get_reporters_writers_and_editors(html_file):
     editors = []
     writers = []
     for substring in substrings:
-        reporter = re.findall(r"[rR]eporting\sby\s(.*)", substring)
+        reporter = re.split('[eE]diting by', substring)[0]
+        reporter = re.findall(r"[rR]eporting\sby\s(.*)", reporter)
         if len(reporter) != 0:
-            reporters.append(re.split(' and | & | , ', reporter[0]))
+            reporters.append(re.split(' and | & |, ', reporter[0]))
         editor = re.findall(r"[eE]diting\sby\s(.*)", substring)
         if len(editor) != 0:
-            editors.append(re.split(' and | & | , ', editor[0]))
-        writer = re.findall(r"[wW]riting\sby\s(.*)", substring)
+            editors.append(re.split(' and | & |, ', editor[0]))
+        writer = re.split('[eE]diting by', substring)[0]
+        writer = re.findall(r"[wW]riting\sby\s(.*)", writer)
         if len(writer) != 0:
-            writers.append(re.split(' and | & | , ', writer[0]))
+            writers.append(re.split(' and | & |, ', writer[0]))
         
     return sum(reporters, []), sum(writers, []), sum(editors, [])
 
@@ -69,7 +71,6 @@ for article in articles_html:
         article_date_time = get_article_date_time(text_raw)
         main_author = get_main_author(text_raw)
         reporters, writers, editors = get_reporters_writers_and_editors(text_raw)
-
         articles.append({"key_words": key_words, "title": title, "article_date_time": article_date_time,\
                          "main_author": main_author, "reporters": reporters, "writers": writers, \
                          "editors": editors})
@@ -79,6 +80,10 @@ for article in articles_html:
 # %%
 df = pd.DataFrame(articles)
 df.head(10)
+
+
+# %%
+df.to_csv("data/output/test.csv")
 
 
 # %%
