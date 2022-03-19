@@ -61,7 +61,6 @@ def get_reporters_writers_and_editors(html_file):
         writer = re.findall(r"[wW]riting\sby\s(.*)", writer)
         if len(writer) != 0:
             writers.append(re.split(' and | & |, ', writer[0]))
-        
     return sum(reporters, []), sum(writers, []), sum(editors, [])
 
 
@@ -69,8 +68,14 @@ def get_url(html_file):
     search_string = 'name="analyticsAttributes.canonicalUrl" content="'
     start_idx = html_file.find(search_string) + len(search_string)
     end_idx = html_file.find('" />', start_idx)
-    substring = html_file[start_idx:end_idx]
-    return substring
+    return html_file[start_idx:end_idx]
+
+
+def get_contentChannel(html_file):
+    search_string = 'name="analyticsAttributes.topicChannel" content="'
+    start_idx = html_file.find(search_string) + len(search_string)
+    end_idx = html_file.find('" />', start_idx)
+    return html_file[start_idx:end_idx]
 
 
 # %%
@@ -85,9 +90,10 @@ for article in articles_html:
         main_author = get_main_author(text_raw)
         reporters, writers, editors = get_reporters_writers_and_editors(text_raw)
         article_url = get_url(text_raw)
+        contenc_channel = get_contentChannel(text_raw)
         articles.append({"key_words": key_words, "title": title, "article_date_time": article_date_time,\
                          "main_author": main_author, "reporters": reporters, "writers": writers, \
-                         "editors": editors, "url": article_url})
+                         "editors": editors, "url": article_url, "content_channel": contenc_channel})
 
 
 
