@@ -60,6 +60,14 @@ def get_reporters_writers_and_editors(html_file):
     return sum(reporters, []), sum(writers, []), sum(editors, [])
 
 
+def get_url(html_file):
+    search_string = 'name="analyticsAttributes.canonicalUrl" content="'
+    start_idx = html_file.find(search_string) + len(search_string)
+    end_idx = html_file.find('" />', start_idx)
+    substring = html_file[start_idx:end_idx]
+    return substring
+
+
 # %%
 articles = []
 
@@ -71,9 +79,10 @@ for article in articles_html:
         article_date_time = get_article_date_time(text_raw)
         main_author = get_main_author(text_raw)
         reporters, writers, editors = get_reporters_writers_and_editors(text_raw)
+        article_url = get_url(text_raw)
         articles.append({"key_words": key_words, "title": title, "article_date_time": article_date_time,\
                          "main_author": main_author, "reporters": reporters, "writers": writers, \
-                         "editors": editors})
+                         "editors": editors, "url": article_url})
 
 
 
