@@ -21,6 +21,7 @@ def fix_unknown_characters(string_input):
     string_input = string_input.replace("&lsquo;", "‘")
     string_input = string_input.replace("&rdquo;", "”")
     string_input = string_input.replace("&ldquo;", "“")
+    string_input = string_input.replace("&amp;", "&")
     return string_input
 
 
@@ -101,6 +102,13 @@ def get_paragraphs(html_file):
     return paragraphs
 
 
+def get_article_id(html_file):
+    search_string = 'data-scrolltoid="'
+    start_idx = html_file.find(search_string) + len(search_string)
+    end_idx = html_file.find('"', start_idx)
+    return html_file[start_idx:end_idx]
+
+
 # %%
 articles = []
 
@@ -114,14 +122,14 @@ for article in articles_html:
         main_author = get_main_author(text_raw)
         reporters, writers, editors = get_reporters_writers_and_editors(text_raw)
         article_url = get_url(text_raw)
-        contenc_channel = get_contentChannel(text_raw)
+        content_channel = get_contentChannel(text_raw)
         description = get_description(text_raw)
         paragraphs = get_paragraphs(text_raw)
-        articles.append({"article_date_time": article_date_time, "title": title, "description": description,\
-                         "main_author": main_author, "reporters": reporters, "writers": writers, \
-                         "editors": editors, "url": article_url, "content_channel": contenc_channel, \
-                         "key_words": key_words, "paragraphs": paragraphs})
-
+        article_id = get_article_id(text_raw)
+        articles.append({"article_date_time": article_date_time, "title": title, "description": description, \
+                         "article_id": article_id, "main_author": main_author, "reporters": reporters, \
+                         "writers": writers, "editors": editors, "content_channel": content_channel, \
+                         "key_words": key_words, "paragraphs": paragraphs, "url": article_url})
 
 
 # %%
