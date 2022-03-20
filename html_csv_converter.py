@@ -52,6 +52,7 @@ def get_main_author(html_file):
     end_idx = html_file.find('">', start_idx)
     return html_file[start_idx:end_idx]
 
+
 def get_reporters_writers_and_editors(html_file):
     search_string = '<p class="Attribution_content">'
     start_idx = html_file.find(search_string) + len(search_string)
@@ -134,6 +135,7 @@ for article in articles_html:
 
 # %%
 df = pd.DataFrame(articles)
+df = df.astype(str).drop_duplicates().reset_index(drop=True)
 df.head(10)
 
 
