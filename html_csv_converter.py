@@ -91,6 +91,12 @@ def get_description(html_file):
     return fix_unknown_characters(html_file[start_idx:end_idx])
 
 
+def get_paragraphs(html_file):
+    paragraphs = re.findall(r"<p>(.*?)</p>", html_file)
+    paragraphs = [paragraph for paragraph in paragraphs if paragraph.find("<") != 0]
+    return paragraphs
+
+
 # %%
 articles = []
 
@@ -105,10 +111,11 @@ for article in articles_html:
         article_url = get_url(text_raw)
         contenc_channel = get_contentChannel(text_raw)
         description = get_description(text_raw)
+        paragraphs = get_paragraphs(text_raw)
         articles.append({"article_date_time": article_date_time, "title": title, "description": description,\
                          "main_author": main_author, "reporters": reporters, "writers": writers, \
                          "editors": editors, "url": article_url, "content_channel": contenc_channel, \
-                         "key_words": key_words})
+                         "key_words": key_words, "paragraphs": paragraphs})
 
 
 
