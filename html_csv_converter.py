@@ -17,6 +17,10 @@ articles_html = listdir(path_to_data)
 def fix_unknown_characters(string_input):
     string_input = string_input.replace("&#039;", "'")
     string_input = string_input.replace("&quot;", "\"")
+    string_input = string_input.replace("&rsquo;", "’")
+    string_input = string_input.replace("&lsquo;", "‘")
+    string_input = string_input.replace("&rdquo;", "”")
+    string_input = string_input.replace("&ldquo;", "“")
     return string_input
 
 
@@ -31,7 +35,7 @@ def get_title(html_file):
     search_string = 'name="analyticsAttributes.title" content="'
     start_idx = html_file.find(search_string) + len(search_string)
     end_idx = html_file.find('" />', start_idx)
-    return fix_unknown_characters(html_file[start_idx:end_idx])
+    return html_file[start_idx:end_idx]
 
 
 def get_article_date_time(html_file):
@@ -88,7 +92,7 @@ def get_description(html_file):
     search_string = 'name="description" content=\''
     start_idx = html_file.find(search_string) + len(search_string)
     end_idx = html_file.find('\' />', start_idx)
-    return fix_unknown_characters(html_file[start_idx:end_idx])
+    return html_file[start_idx:end_idx]
 
 
 def get_paragraphs(html_file):
@@ -103,6 +107,7 @@ articles = []
 for article in articles_html:
     with open(join(path_to_data, article, "source.html")) as data:
         text_raw = data.read()
+        text_raw = fix_unknown_characters(text_raw)
         key_words = get_key_words(text_raw)
         title = get_title(text_raw)
         article_date_time = get_article_date_time(text_raw)
