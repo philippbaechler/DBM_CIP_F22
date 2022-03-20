@@ -14,6 +14,12 @@ articles_html = listdir(path_to_data)
 
 
 #%%
+def fix_unknown_characters(string_input):
+    string_input = string_input.replace("&#039;", "'")
+    string_input = string_input.replace("&quot;", "\"")
+    return string_input
+
+
 def get_key_words(html_file):
     search_string = 'name="keywords" content="'
     start_idx = html_file.find(search_string) + len(search_string)
@@ -25,7 +31,7 @@ def get_title(html_file):
     search_string = 'name="analyticsAttributes.title" content="'
     start_idx = html_file.find(search_string) + len(search_string)
     end_idx = html_file.find('" />', start_idx)
-    return html_file[start_idx:end_idx].replace("&#039;", "'")
+    return fix_unknown_characters(html_file[start_idx:end_idx])
 
 
 def get_article_date_time(html_file):
@@ -78,6 +84,13 @@ def get_contentChannel(html_file):
     return html_file[start_idx:end_idx]
 
 
+def get_description(html_file):
+    search_string = 'name="description" content=\''
+    start_idx = html_file.find(search_string) + len(search_string)
+    end_idx = html_file.find('\' />', start_idx)
+    return fix_unknown_characters(html_file[start_idx:end_idx])
+
+
 # %%
 articles = []
 
@@ -91,9 +104,11 @@ for article in articles_html:
         reporters, writers, editors = get_reporters_writers_and_editors(text_raw)
         article_url = get_url(text_raw)
         contenc_channel = get_contentChannel(text_raw)
-        articles.append({"key_words": key_words, "title": title, "article_date_time": article_date_time,\
+        description = get_description(text_raw)
+        articles.append({"article_date_time": article_date_time, "title": title, "description": description,\
                          "main_author": main_author, "reporters": reporters, "writers": writers, \
-                         "editors": editors, "url": article_url, "content_channel": contenc_channel})
+                         "editors": editors, "url": article_url, "content_channel": contenc_channel, \
+                         "key_words": key_words})
 
 
 
