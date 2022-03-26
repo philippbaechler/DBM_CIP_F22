@@ -7,12 +7,14 @@ from numpy import empty
 import pandas as pd
 import glob
 
+
 #%%
 curren_dir = os.path.abspath(os.getcwd())
 path_to_data = "data/raw/reuters/2020/5"
 #articles_html = listdir(path_to_data)
 articles_html = [f for f in glob.glob(path_to_data + "**/**/*.html", recursive=True)]
 print(len(articles_html))
+
 
 #%%
 def fix_unknown_characters(string_input):

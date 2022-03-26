@@ -58,7 +58,21 @@ def get_main_author(html_file):
         start_idx = html_file.find('">', start_idx) + len('">')
         end_idx = html_file.find('</a>', start_idx)
         return html_file[start_idx:end_idx]
-        
+
+
+def get_url(html_file):
+    search_string = 'name="url" content="'
+    start_idx = html_file.find(search_string) + len(search_string)
+    end_idx = html_file.find('">', start_idx)
+    return html_file[start_idx:end_idx]
+
+
+def get_description(html_file):
+    search_string = 'name="description" content="'
+    start_idx = html_file.find(search_string) + len(search_string)
+    end_idx = html_file.find('">', start_idx)
+    print(html_file[start_idx:end_idx])
+
 
 # %%
 articles = []
@@ -71,6 +85,8 @@ for article in articles_html:
         title = get_title(text_raw)
         article_date_time = get_article_date_time(text_raw)
         main_author = get_main_author(text_raw)
+        article_url = get_url(text_raw)
+        description = get_description(text_raw)
 
 
 
