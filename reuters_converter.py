@@ -5,13 +5,14 @@ from os.path import join
 import re
 from numpy import empty
 import pandas as pd
-
+import glob
 
 #%%
 curren_dir = os.path.abspath(os.getcwd())
-path_to_data = "data/raw/reuters/17"
-articles_html = listdir(path_to_data)
-
+path_to_data = "data/raw/reuters/2020/5"
+#articles_html = listdir(path_to_data)
+articles_html = [f for f in glob.glob(path_to_data + "**/**/*.html", recursive=True)]
+print(len(articles_html))
 
 #%%
 def fix_unknown_characters(string_input):
@@ -114,7 +115,7 @@ def get_article_id(html_file):
 articles = []
 
 for article in articles_html:
-    with open(join(path_to_data, article, "source.html")) as data:
+    with open(article) as data:
         text_raw = data.read()
         text_raw = fix_unknown_characters(text_raw)
         key_words = get_key_words(text_raw)
@@ -140,7 +141,7 @@ df.head(10)
 
 
 # %%
-df.to_csv("data/output/test.csv")
+df.to_csv("data/output/reuters_Mai_2020.csv")
 
 
 # %%
