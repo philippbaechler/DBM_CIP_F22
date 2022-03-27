@@ -42,8 +42,39 @@ def get_title(html_file):
     search_string = 'property="og:title" content="'
     start_idx = html_file.find(search_string) + len(search_string)
     end_idx = html_file.find('"/>', start_idx)
-    print(html_file[start_idx:end_idx])
+    return html_file[start_idx:end_idx]
 
+
+def get_authors(html_file):
+    search_string = 'class="authors__name">'
+    start_idx = html_file.find(search_string) + len(search_string)
+    if (start_idx <= len(search_string)):
+        return pd.NA
+    else:
+        end_idx = html_file.find('</span>', start_idx)
+        reporters = html_file[start_idx:end_idx]
+        return re.split(', | und ', reporters)
+
+
+def get_article_date_time(html_file):
+    search_string = 'class="authors__pubdate"'
+    start_idx = html_file.find(search_string) + len(search_string)
+    if start_idx > len(search_string):
+        start_idx = html_file.find('>', start_idx) + len('>')
+        end_idx = html_file.find('</time>', start_idx)
+        return html_file[start_idx:end_idx].split(" Uhr")[0]
+    else:
+        return pd.NA
+
+
+def get_url(html_file):
+    search_string = 'property="og:url" content="'
+    start_idx = html_file.find(search_string) + len(search_string)
+    if start_idx > len(search_string):
+        end_idx = html_file.find('"', start_idx)
+        return html_file[start_idx:end_idx]
+    else:
+        return pd.NA
 
 # %%
 articles = []
@@ -54,6 +85,11 @@ for article in articles_html:
         text_raw = fix_unknown_characters(text_raw)
         key_words = get_key_words(text_raw)
         title = get_title(text_raw)
+        reporters = get_authors(text_raw)
+        article_date_time = get_article_date_time(text_raw)
+        article_url = get_url(text_raw)
+
+
 
 
 
