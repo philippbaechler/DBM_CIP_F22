@@ -11,7 +11,7 @@ articles_html = [f for f in glob.glob(path_to_data + "/**/*.html", recursive=Tru
 print(len(articles_html))
 
 
-#%%
+# %%
 def fix_unknown_characters(string_input):
     string_input = string_input.replace("&#039;", "'")
     string_input = string_input.replace("&#39;", "'")
