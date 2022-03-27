@@ -4,8 +4,9 @@ import re
 import pandas as pd
 import glob
 
+
 # %%
-path_to_data = "data/raw/aljazeera/2020/2/2"
+path_to_data = "data/raw/aljazeera/2020/1"
 articles_html = [f for f in glob.glob(path_to_data + "/**/*.html", recursive=True)]
 print(len(articles_html))
 
@@ -50,9 +51,12 @@ def get_article_date_time(html_file):
     start_idx = html_file.find(search_string) + len(search_string)
     search_string = 'class="timeagofunction"'
     start_idx = html_file.find(search_string, start_idx) + len(search_string)
-    start_idx = html_file.find(">", start_idx) + len(">")
-    end_idx = html_file.find('</time>', start_idx)
-    return pd.to_datetime(html_file[start_idx:end_idx].split(" GMT")[0])
+    if start_idx > len(search_string):
+        start_idx = html_file.find(">", start_idx) + len(">")
+        end_idx = html_file.find('</time>', start_idx)
+        return pd.to_datetime(html_file[start_idx:end_idx].split(" GMT")[0])
+    else:
+        return pd.NA
 
 
 def get_main_author(html_file):
@@ -128,5 +132,7 @@ df.head(10)
 
 
 # %%
-df.to_csv("data/output/al_jazeera_Feb_2020.csv")
+df.to_csv("data/output/al_jazeera_Jan_2020.csv")
 
+
+# %%
