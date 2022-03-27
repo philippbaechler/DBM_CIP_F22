@@ -20,6 +20,14 @@ def fix_unknown_characters(string_input):
     string_input = string_input.replace("&rdquo;", "”")
     string_input = string_input.replace("&ldquo;", "“")
     string_input = string_input.replace("&amp;", "&")
+    string_input = string_input.replace("\xa0", " ")
+    return string_input
+
+
+def remove_html_content(string_input):
+    html_contents = re.findall(r"<(.*?)>", string_input)
+    for content in html_contents:
+        string_input = string_input.replace(("<" + content + ">"), "")
     return string_input
 
 
@@ -71,7 +79,25 @@ def get_description(html_file):
     search_string = 'name="description" content="'
     start_idx = html_file.find(search_string) + len(search_string)
     end_idx = html_file.find('">', start_idx)
-    print(html_file[start_idx:end_idx])
+    return html_file[start_idx:end_idx]
+
+
+def get_topics(html_file):
+    topics = re.findall(r"data-topic-name=\"(.*?)\">", html_file)
+    return topics
+
+
+def get_paragraphs(html_file):
+    paragraphs = re.findall(r"<p>(.*?)</p>", html_file)
+    paragraphs = [remove_html_content(paragraph) for paragraph in paragraphs]
+    return paragraphs
+
+
+def get_article_id(html_file):
+    search_string = 'name="guid" content="'
+    start_idx = html_file.find(search_string) + len(search_string)
+    end_idx = html_file.find('">', start_idx)
+    return html_file[start_idx:end_idx]
 
 
 # %%
@@ -87,7 +113,20 @@ for article in articles_html:
         main_author = get_main_author(text_raw)
         article_url = get_url(text_raw)
         description = get_description(text_raw)
-
+        topics = get_topics(text_raw)
+        paragraphs = get_paragraphs(text_raw)
+        article_id = get_article_id(text_raw)
+        articles.append({"article_date_time": article_date_time, "title": title, "description": description, \
+                         "article_id": article_id, "main_author": main_author, "topics": topics, \
+                         "key_words": key_words, "paragraphs": paragraphs, "url": article_url})
 
 
 # %%
+df = pd.DataFrame(articles)
+df = df.astype(str).drop_duplicates().reset_index(drop=True)
+df.head(10)
+
+
+# %%
+df.to_csv("data/output/al_jazeera_Feb_2020.csv")
+
