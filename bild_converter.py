@@ -23,7 +23,7 @@ def get_title(html_file):
     search_string = 'property="og:title" content="'
     start_idx = html_file.find(search_string) + len(search_string)
     end_idx = html_file.find('>', start_idx)
-    return html_file[start_idx:end_idx].split("\"")[0].replace("\n", "")
+    return remove_new_line_character(html_file[start_idx:end_idx].split("\"")[0])
 
 
 def get_authors(html_file):
@@ -74,7 +74,7 @@ def get_description(html_file):
     search_string = 'name="description" content="'
     start_idx = html_file.find(search_string) + len(search_string)
     end_idx = html_file.find('"', start_idx)
-    return html_file[start_idx:end_idx].replace("\n", "")
+    return remove_new_line_character(html_file[start_idx:end_idx])
 
 
 def get_paragraphs(html_file):
@@ -111,7 +111,7 @@ for article in articles_html:
         article_url = get_url(text_raw)
         description = get_description(text_raw)
         topic = get_topics(article_url)
-        paragraphs = get_paragraphs(text_raw)
+        paragraphs = join_paragraphs_to_text(get_paragraphs(text_raw))
         article_id = get_article_id(article_url)
         articles.append({"article_date_time": article_date_time, "title": title, "description": description, \
                          "article_id": article_id, "reporters": reporters, "topic": topic, \

@@ -63,7 +63,7 @@ def get_description(html_file):
     search_string = 'name="description" content="'
     start_idx = html_file.find(search_string) + len(search_string)
     end_idx = html_file.find('">', start_idx)
-    return html_file[start_idx:end_idx]
+    return remove_new_line_character(html_file[start_idx:end_idx])
 
 
 def get_topics(html_file):
@@ -98,7 +98,7 @@ for article in articles_html:
         article_url = get_url(text_raw)
         description = get_description(text_raw)
         topics = get_topics(text_raw)
-        paragraphs = get_paragraphs(text_raw)
+        paragraphs = join_paragraphs_to_text(get_paragraphs(text_raw))
         article_id = get_article_id(text_raw)
         articles.append({"article_date_time": article_date_time, "title": title, "description": description, \
                          "article_id": article_id, "main_author": main_author, "topics": topics, \

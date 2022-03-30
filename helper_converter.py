@@ -20,3 +20,13 @@ def remove_html_content(string_input):
     for content in html_contents:
         string_input = string_input.replace(("<" + content + ">"), " ")
     return string_input
+
+
+def remove_new_line_character(string_input):
+    return string_input.replace("\n", "")
+
+
+def join_paragraphs_to_text(list_of_paragraphs):
+    return ' '.join(list_of_paragraphs)
+
+
