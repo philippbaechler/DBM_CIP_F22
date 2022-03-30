@@ -33,17 +33,17 @@ def remove_html_content(string_input):
 
 
 def get_key_words(html_file):
-    search_string = 'name="news_keywords" content="'
+    search_string = 'name="keywords" content="'
     start_idx = html_file.find(search_string) + len(search_string)
-    end_idx = html_file.find('" />', start_idx)
-    return html_file[start_idx:end_idx].split(",")
+    end_idx = html_file.find('>', start_idx)
+    return html_file[start_idx:end_idx].split("\"")[0].split(",")
 
 
 def get_title(html_file):
     search_string = 'property="og:title" content="'
     start_idx = html_file.find(search_string) + len(search_string)
-    end_idx = html_file.find('"/>', start_idx)
-    return html_file[start_idx:end_idx]
+    end_idx = html_file.find('>', start_idx)
+    return html_file[start_idx:end_idx].split("\"")[0].replace("\n", "")
 
 
 def get_authors(html_file):
@@ -72,6 +72,11 @@ def get_article_date_time(html_file):
             end_idx = html_file.find('</time>', start_idx)
             return pd.to_datetime(html_file[start_idx:end_idx].split(" Uhr")[0])
         else:
+            search_string = '"publicationDate" : "'
+            start_idx = html_file.find(search_string) + len(search_string)
+            if start_idx > len(search_string):
+                end_idx = html_file.find('",', start_idx)
+                return pd.to_datetime(html_file[start_idx:end_idx])
             return pd.NA
 
 
@@ -89,7 +94,7 @@ def get_description(html_file):
     search_string = 'name="description" content="'
     start_idx = html_file.find(search_string) + len(search_string)
     end_idx = html_file.find('"', start_idx)
-    return html_file[start_idx:end_idx]
+    return html_file[start_idx:end_idx].replace("\n", "")
 
 
 def get_paragraphs(html_file):
