@@ -50,7 +50,7 @@ def get_authors(html_file):
     search_string = 'class="authors__name">'
     start_idx = html_file.find(search_string) + len(search_string)
     if (start_idx <= len(search_string)):
-        return pd.NA
+        return []
     else:
         end_idx = html_file.find('</span>', start_idx)
         reporters = html_file[start_idx:end_idx]
