@@ -1,33 +1,19 @@
 #%%
 import os
-from os import listdir
-from os.path import join
 import re
-from numpy import empty
 import pandas as pd
 import glob
+from helper_converter import *
 
 
 #%%
 curren_dir = os.path.abspath(os.getcwd())
-path_to_data = "data/raw/reuters/2020/5"
-#articles_html = listdir(path_to_data)
+path_to_data = "data/raw/reuters/2020/1"
 articles_html = [f for f in glob.glob(path_to_data + "**/**/*.html", recursive=True)]
 print(len(articles_html))
 
 
 #%%
-def fix_unknown_characters(string_input):
-    string_input = string_input.replace("&#039;", "'")
-    string_input = string_input.replace("&quot;", "\"")
-    string_input = string_input.replace("&rsquo;", "’")
-    string_input = string_input.replace("&lsquo;", "‘")
-    string_input = string_input.replace("&rdquo;", "”")
-    string_input = string_input.replace("&ldquo;", "“")
-    string_input = string_input.replace("&amp;", "&")
-    return string_input
-
-
 def get_key_words(html_file):
     search_string = 'name="keywords" content="'
     start_idx = html_file.find(search_string) + len(search_string)
@@ -143,7 +129,7 @@ df.head(10)
 
 
 # %%
-df.to_csv("data/output/reuters_Mai_2020.csv")
+df.to_csv("data/output/reuters_Jan_2020.csv")
 
 
 # %%
