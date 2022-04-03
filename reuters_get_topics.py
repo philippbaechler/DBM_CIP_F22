@@ -32,7 +32,7 @@ def get_sub_categories_from_main_category(driver, url):
     option_elements = driver.find_elements(By.TAG_NAME, "option")
     sub_categories = []
     for el in option_elements:
-        url = "https://www.reuters.com" + el.get_attribute("value")
+        url = "https://www.reuters.com" + el.get_attribute("value") + "/"
         sub_categories.append(url)
     return sub_categories
 
@@ -49,7 +49,15 @@ def get_all_article_links_from_sub_category(driver, url):
     article_links = list(dict.fromkeys(article_links))
     return article_links    
 
-    
+
+def remove_link_if_found_in_categories(all_links):
+    all_links_cleaned = []
+    for link in all_links:
+        if link not in main_categories and link not in sub_categories:
+            all_links_cleaned.append(link)
+    return all_links_cleaned
+
+
 #%%
 driver = get_driver()
 
@@ -60,6 +68,11 @@ main_categories = get_main_categories(driver)
 sub_categories = get_sub_categories_from_main_category(driver, main_categories[0])
 
 # %%
-get_all_article_links_from_sub_category(driver, sub_categories[3])
+all_links = get_all_article_links_from_sub_category(driver, sub_categories[3])
 
 # %%
+remove_link_if_found_in_categories(all_links)
+
+# %%
+
+
