@@ -45,14 +45,8 @@ for idx in range(2000, 2010, 1):
 
 # %%
 df = pd.DataFrame({"url": all_links})
+df = df.drop_duplicates().reset_index(drop=True)
 df.head()
-
-# %%
-df.shape
-
-# %%
-df = df.drop_duplicates().reset_index()
-df.shape
 
 # %%
 df.to_csv("data/all_links.csv")
