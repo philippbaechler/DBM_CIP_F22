@@ -5,7 +5,7 @@ import re
 
 
 # %%
-df = pd.read_csv("data/output/reuters_Jan_2020.csv", index_col=0)
+df = pd.read_csv("data/output/sample_unnormalized.csv", index_col=0)
 df.sample(5)
 
 
@@ -35,7 +35,7 @@ for row in df_sub.iterrows():
             keyword_id = (len(df_keywords))
             df_keywords = df_keywords.append({"keyword_id": keyword_id, "keyword": keyword}, ignore_index=True)
         keyword_id = df_keywords.loc[df_keywords["keyword"] == keyword]["keyword_id"]
-        describes.append({"article_id": article_id, "keyword_id": keyword_id})
+        describes.append({"article_id": article_id, "keyword_id": int(keyword_id)})
 
 
 
