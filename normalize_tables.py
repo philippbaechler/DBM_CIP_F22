@@ -54,18 +54,3 @@ df_describes.to_csv("data/output/describes.csv")
 
 
 # %%
-from sqlalchemy import create_engine
-engine = create_engine('sqlite://', echo=False)
-
-# %%
-df = pd.DataFrame({'name' : ['User 1', 'User 2', 'User 3']})
-df
-
-# %%
-df.to_sql('users', con=engine)
-
-# %%
-engine.execute("SELECT * FROM users").fetchall()
-
-
-# %%
