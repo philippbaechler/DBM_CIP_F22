@@ -37,8 +37,8 @@ df_sub
 
 
 # %%
-articles = []       # id | date_time | title | description
-describes = []      # article_id | key_word_id
+articles = []           # id | date_time | title | description
+article_keyword = []    # article_id | key_word_id
 df_keywords = pd.DataFrame({"id":[], "keyword":[]})
 df_authors = pd.DataFrame({"id":[], "name":[]})
 df_article_author = pd.DataFrame({"article_id":[], "author_id":[]})
@@ -66,7 +66,7 @@ for row in df_sub.iterrows():
             keyword_id = len(df_keywords)
             df_keywords = df_keywords.append({"id": keyword_id, "keyword": keyword}, ignore_index=True)
         keyword_id = df_keywords.loc[df_keywords["keyword"]==keyword]["id"]
-        describes.append({"article_id": article_id, "keyword_id": int(keyword_id)})
+        article_keyword.append({"article_id": article_id, "keyword_id": int(keyword_id)})
 
     if not pd.isna(row[1]["main_author"]):
         main_author_name = row[1]["main_author"]
@@ -93,7 +93,7 @@ for row in df_sub.iterrows():
 
 
 df_articles = pd.DataFrame(articles)
-df_describes = pd.DataFrame(describes)
+df_article_keyword = pd.DataFrame(article_keyword)
 
 df_keywords["id"] = df_keywords["id"].astype(int)
 df_authors["id"] = df_authors["id"].astype(int)
@@ -106,7 +106,7 @@ df_author_role["role_id"] = df_author_role["role_id"].astype(int)
 # %%
 df_keywords.to_csv("data/output/keywords.csv")
 df_articles.to_csv("data/output/articles.csv")
-df_describes.to_csv("data/output/describes.csv")
+df_article_keyword.to_csv("data/output/article_keyword.csv")
 df_authors.to_csv("data/output/authors.csv")
 df_article_author.to_csv("data/output/article_author.csv")
 df_author_role.to_csv("data/output/author_role.csv")
