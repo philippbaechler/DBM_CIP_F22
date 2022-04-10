@@ -37,8 +37,8 @@ df_sub
 
 
 # %%
-articles = []                                               # id | date_time | title | description
-describes = []                                              # article_id | key_word_id
+articles = []       # id | date_time | title | description
+describes = []      # article_id | key_word_id
 df_keywords = pd.DataFrame({"id":[], "keyword":[]})
 df_authors = pd.DataFrame({"id":[], "name":[]})
 df_article_author = pd.DataFrame({"article_id":[], "author_id":[]})
@@ -73,23 +73,44 @@ for row in df_sub.iterrows():
         role_id = df_roles.loc[df_roles["role"]=="main_author"]["id"]
         append_author_article_role(main_author_name, role_id, article_id)
 
+    for reporter in row[1]["reporters"]:
+        if reporter == "":
+            continue
+        role_id = df_roles.loc[df_roles["role"]=="reporter"]["id"]
+        append_author_article_role(reporter, role_id, article_id)
 
-df_keywords["id"] = df_keywords["id"].astype(int)
-print(df_keywords.sample(5))
+    for writer in row[1]["writers"]:
+        if writer == "":
+            continue
+        role_id = df_roles.loc[df_roles["role"]=="writer"]["id"]
+        append_author_article_role(writer, role_id, article_id)
+
+    for editor in row[1]["editors"]:
+        if editor == "":
+            continue
+        role_id = df_roles.loc[df_roles["role"]=="editor"]["id"]
+        append_author_article_role(editor, role_id, article_id)
+
 
 df_articles = pd.DataFrame(articles)
-print(df_articles.sample(5))
-
 df_describes = pd.DataFrame(describes)
-print(df_describes.sample(5))
 
-
+df_keywords["id"] = df_keywords["id"].astype(int)
+df_authors["id"] = df_authors["id"].astype(int)
+df_article_author["article_id"] = df_article_author["article_id"].astype(int)
+df_article_author["author_id"] = df_article_author["author_id"].astype(int)
+df_author_role["author_id"] = df_author_role["author_id"].astype(int)
+df_author_role["role_id"] = df_author_role["role_id"].astype(int)
 
 
 # %%
 df_keywords.to_csv("data/output/keywords.csv")
 df_articles.to_csv("data/output/articles.csv")
 df_describes.to_csv("data/output/describes.csv")
+df_authors.to_csv("data/output/authors.csv")
+df_article_author.to_csv("data/output/article_author.csv")
+df_author_role.to_csv("data/output/author_role.csv")
+df_roles.to_csv("data/output/roles.csv")
 
 
 # %%
