@@ -30,7 +30,7 @@ def test_mysql_connection():
 def get_content_of_keywords_t():
     dbEngine.execute("USE mydb")
     output = dbEngine.execute("SELECT * FROM keywords_t").fetchall()
-    output
+    print(output)
 
 
 def delete_content_of_keywords_t():
