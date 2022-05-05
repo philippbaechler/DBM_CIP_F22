@@ -87,13 +87,19 @@ def get_description(article_soup):
         return ""
 
 
-def get_paragraphs(article_soup):
+def get_paragraphs_and_location(article_soup):
     paragraphs = article_soup.find_all("p", class_="Paragraph-paragraph-2Bgue ArticleBody-para-TD_9x")
     paragraphs = [paragraph.get_text() for paragraph in paragraphs]
     paragraphs = [remove_html_content(paragraph) for paragraph in paragraphs]
     paragraphs = [paragraph.replace("\n         ", "") for paragraph in paragraphs]
     paragraphs = [paragraph.replace("\n        ", "") for paragraph in paragraphs]
-    return paragraphs
+    location = ""
+    if len(paragraphs) > 0:
+        para_split = paragraphs[0].split("(Reuters) - ")
+        if len(para_split) > 1:
+            location = para_split[0]
+            paragraphs[0] = para_split[1]
+    return paragraphs, location 
 
 
 def get_article_id(article_url):
@@ -104,7 +110,7 @@ def get_article_id(article_url):
 articles = []
 
 for idx, article in enumerate(articles_html):
-    if idx >= 10:
+    if idx >= 120:
         break
     with open(article) as data:
         data = data.read()
@@ -118,12 +124,13 @@ for idx, article in enumerate(articles_html):
         article_url = get_url(soup)
         content_channel = get_contentChannel(soup)
         description = get_description(soup)
-        paragraphs = join_paragraphs_to_text(get_paragraphs(soup))
+        paragraphs, location = get_paragraphs_and_location(soup)
+        article_text = join_paragraphs_to_text(paragraphs)
         article_id = get_article_id(article_url)
         articles.append({"article_date_time": article_date_time, "title": title, "description": description, \
                          "article_id": article_id, "main_author": main_author, "reporters": reporters, \
                          "writers": writers, "editors": editors, "content_channel": content_channel, \
-                         "key_words": key_words, "paragraphs": paragraphs, "url": article_url})
+                         "key_words": key_words, "location": location, "text": article_text, "url": article_url})
 
 
 # %%
