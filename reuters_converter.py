@@ -9,7 +9,7 @@ from helper_converter import *
 
 #%%
 curren_dir = os.path.abspath(os.getcwd())
-path_to_data = "data/raw/reuters/"
+path_to_data = "data/raw/reuters_old/1/"
 articles_html = [f for f in glob.glob(path_to_data + "**/**/*.html", recursive=True)]
 print(len(articles_html))
 
@@ -24,43 +24,55 @@ def get_key_words(article_soup):
 
 def get_title(article_soup):
     try:
-        return article_soup.find("meta", attrs={'name':'analyticsAttributes.title'}).attrs["content"]
+        title = article_soup.find("meta", attrs={'name':'analyticsAttributes.title'})
+        if title == None:
+            title = article_soup.find("meta", attrs={'property':'og:title'})
+        return title.attrs["content"]
     except:
         return ""
     
 
 def get_article_date_time(article_soup):
     try:
-        return pd.to_datetime(article_soup.find("meta", attrs={'name':'analyticsAttributes.articleDate'}).attrs["content"])
+        article_datetime = article_soup.find("meta", attrs={'name':'analyticsAttributes.articleDate'})
+        if article_datetime == None:
+            article_datetime = article_soup.find("meta", attrs={'name':'article:published_time'})
+        return pd.to_datetime(article_datetime.attrs["content"])
     except:
         return ""
 
 
 def get_main_authors(article_soup):
     try:
-        return article_soup.find("meta", attrs={'name':'analyticsAttributes.author'}).attrs["content"].split(",")
+        author_names = article_soup.find("meta", attrs={'name':'analyticsAttributes.author'})
+        if author_names == None:
+            author_names = article_soup.find("meta", attrs={'name':'article:author'})
+        return author_names.attrs["content"].split(",")
     except:
         return ""
 
 
 def get_reporters_writers_and_editors(article_soup):
     try:
-        substrings = article_soup.find("div", class_='Attribution-attribution-Y5JpY').find("p").get_text().split(";")
+        substrings = article_soup.find("body").get_text()
+        substrings = re.split('\n|; |Our Standards', substrings)
         reporters = []
         editors = []
         writers = []
+        
         for substring in substrings:
-            reporter = re.split('[eE]diting by', substring)[0]
-            reporter = re.findall(r"[rR]eporting\sby\s(.*)", reporter)
-            if len(reporter) != 0:
-                reporters.append(re.split(' and | & |, ', reporter[0]))
-            editor = re.findall(r"[eE]diting\sby\s(.*)", substring)
-            if len(editor) != 0:
-                editors.append(re.split(' and | & |, ', editor[0]))
-            writer = re.split('[eE]diting by', substring)[0]
-            writer = re.findall(r"[wW]riting\sby\s(.*)", writer)
-            if len(writer) != 0:
-                writers.append(re.split(' and | & |, ', writer[0]))
+            if "reporting by" in substring.lower():
+                reporter = re.findall(r"[rR]eporting\sby\s(.*)", substring)
+                if len(reporter) != 0:
+                    reporters.append(re.split(' and | & |, ', reporter[0]))
+            elif "editing by" in substring.lower():
+                editor = re.findall(r"[eE]diting\sby\s(.*)", substring)
+                if len(editor) != 0:
+                    editors.append(re.split(' and | & |, ', editor[0]))
+            elif "writing by" in substring.lower():
+                writer = re.findall(r"[wW]riting\sby\s(.*)", substring)
+                if len(writer) != 0:
+                    writers.append(re.split(' and | & |, ', writer[0]))
         return sum(reporters, []), sum(writers, []), sum(editors, [])
     except:
         return [],[],[]
@@ -68,7 +80,10 @@ def get_reporters_writers_and_editors(article_soup):
 
 def get_url(article_soup):
     try:
-        return article_soup.find("meta", attrs={'name':'analyticsAttributes.canonicalUrl'}).attrs["content"]
+        article_url = article_soup.find("meta", attrs={'name':'analyticsAttributes.canonicalUrl'})
+        if article_url == None:
+            article_url = article_soup.find("meta", attrs={'property':'og:url'})
+        return article_url.attrs["content"]
     except:
         return ""
 
@@ -87,30 +102,29 @@ def get_description(article_soup):
         return ""
 
 
-def get_paragraphs_and_location(article_soup):
-    paragraphs = article_soup.find_all("p", class_="Paragraph-paragraph-2Bgue ArticleBody-para-TD_9x")
-    paragraphs = [paragraph.get_text() for paragraph in paragraphs]
-    paragraphs = [remove_html_content(paragraph) for paragraph in paragraphs]
-    paragraphs = [paragraph.replace("\n         ", "") for paragraph in paragraphs]
-    paragraphs = [paragraph.replace("\n        ", "") for paragraph in paragraphs]
-    location = ""
+def get_paragraphs(article_soup):
+    paragraphs = article_soup.find_all("p")
     if len(paragraphs) > 0:
-        para_split = paragraphs[0].split("(Reuters) - ")
-        if len(para_split) > 1:
-            location = para_split[0]
-            paragraphs[0] = para_split[1]
-    return paragraphs, location 
+        paragraphs = [paragraph.get_text() for paragraph in paragraphs]
+        paragraphs = [remove_html_content(paragraph) for paragraph in paragraphs]
+        paragraphs = [remove_new_line_character(paragraph) for paragraph in paragraphs]
+        paragraphs = [re.sub("([ ]{2,})", "", paragraph) for paragraph in paragraphs]
+        if "Min Read" in paragraphs[0]:
+            paragraphs.pop(0)
+        return paragraphs
+    else:
+        return []
 
 
 def get_article_id(article_url):
-    return article_url.split("-id")[-1]
+    return article_url.split("-id")[-1].replace(".html", "")
 
 
 # %%
 articles = []
 
 for idx, article in enumerate(articles_html):
-    if idx >= 120:
+    if idx >= 1000:
         break
     with open(article) as data:
         data = data.read()
@@ -124,13 +138,12 @@ for idx, article in enumerate(articles_html):
         article_url = get_url(soup)
         content_channel = get_contentChannel(soup)
         description = get_description(soup)
-        paragraphs, location = get_paragraphs_and_location(soup)
+        paragraphs = get_paragraphs(soup)
         article_text = join_paragraphs_to_text(paragraphs)
-        article_id = get_article_id(article_url)
         articles.append({"article_date_time": article_date_time, "title": title, "description": description, \
-                         "article_id": article_id, "main_author": main_author, "reporters": reporters, \
+                         "main_author": main_author, "reporters": reporters, \
                          "writers": writers, "editors": editors, "content_channel": content_channel, \
-                         "key_words": key_words, "location": location, "text": article_text, "url": article_url})
+                         "key_words": key_words, "text": article_text, "url": article_url})
 
 
 # %%
@@ -140,7 +153,7 @@ df.head(10)
 
 
 # %%
-df.to_csv("data/output/reuters_Jan_2020.csv")
+df.to_csv("data/output/reuters_sample.csv")
 
 
 # %%
