@@ -25,13 +25,28 @@ def clean_location_name(location):
     return location.split(".")[0]
 
 
+def clean_key_word(key_word):
+    key_word = key_word.lower()
+    key_word = key_word.replace(" (trbc level 1)", "")
+    key_word = key_word.replace(" (trbc level 2)", "")
+    key_word = key_word.replace(" (trbc level 3)", "")
+    key_word = key_word.replace(" (trbc level 4)", "")
+    key_word = key_word.replace(" (trbc)", "")
+    key_word = key_word.replace(" (legacy)", "")
+    return key_word
+
+
 def append_author_article_role(name, role_id, article_id):
     global df_authors, df_article_author, df_author_role
     name = clean_author_name(name)
     location = ""
     if " in " in name:
-        name, location = name.split(" in ")
-        location = clean_location_name(location)
+        name_location_split = name.split(" in ")
+        if len(name_location_split) == 2:
+            name, location = name_location_split
+            location = clean_location_name(location)
+        else:
+            return
     if name not in list(df_authors["name"]):
         df_authors = df_authors.append({"id":len(df_authors), "name":name, "location": location}, ignore_index=True)
     author_id = df_authors.loc[df_authors["name"]==name]["id"]
@@ -96,7 +111,7 @@ df_sub.tail()
 
 
 # %%
-df_sub = df_sub.head(100)
+df_sub = df_sub.head(3000)
 
 
 # %%
@@ -125,6 +140,7 @@ for row in df_sub.iterrows():
     all_article_keywords = row[1]["key_words"]
 
     for keyword in all_article_keywords:
+        keyword = clean_key_word(keyword)
         if keyword not in list(df_keywords["keyword"]):
             keyword_id = len(df_keywords)
             df_keywords = df_keywords.append({"id": keyword_id, "keyword": keyword}, ignore_index=True)
