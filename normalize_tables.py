@@ -22,18 +22,62 @@ def append_author_article_role(name, role_id, article_id):
 
 
 # %%
-df = pd.read_csv("data/output/reuters_sample_unnormalized.csv", index_col=0, \
+df = pd.read_csv("data/output/reuters_dirty.csv", index_col=0, \
                  converters={"key_words": convert_string_to_list, \
+                             "main_author": convert_string_to_list, \
                              "reporters": convert_string_to_list, \
                              "writers": convert_string_to_list, \
                              "editors": convert_string_to_list})
-df.sample(5)
+df.head(5)
 
 
 # %%
-df_sub = df[["article_date_time", "title", "description", "key_words", \
-             "main_author", "reporters", "writers", "editors"]]
-df_sub
+# Check for data types
+df.dtypes
+
+
+# %%
+# Convert to datetime to sort articles
+df["article_date_time"] = pd.to_datetime(df["article_date_time"])
+df.head()
+
+
+# %%
+# Check for missing datetimes
+len(df[df["article_date_time"].isnull()])
+len(df)
+
+
+# %%
+# As we have only three missing lines in 40991 observations, we simply delete these
+df = df[df["article_date_time"].notnull()]
+
+
+# %%
+# Sort articles by datetime
+df.sort_values(by="article_date_time", inplace=True)
+df.reset_index(inplace=True, drop=True)
+df.head()
+
+
+# %%
+# example keywords before 2021-04-08
+df.iloc[24161]["key_words"]
+
+
+# %%
+# example keywords after 2021-04-09
+df.iloc[24180]["key_words"]
+
+
+# %%
+# Restrict to articles before '2021-04-08'
+df_sub = df[df["article_date_time"] < '2021-04-08']
+df_sub.tail()
+
+
+# %%
+df_sub = df_sub.head(100)
 
 
 # %%
@@ -68,10 +112,11 @@ for row in df_sub.iterrows():
         keyword_id = df_keywords.loc[df_keywords["keyword"]==keyword]["id"]
         article_keyword.append({"article_id": article_id, "keyword_id": int(keyword_id)})
 
-    if not pd.isna(row[1]["main_author"]):
-        main_author_name = row[1]["main_author"]
+    for main_author in row[1]["main_author"]:
+        if main_author == "":
+            continue
         role_id = df_roles.loc[df_roles["role"]=="main_author"]["id"]
-        append_author_article_role(main_author_name, role_id, article_id)
+        append_author_article_role(main_author, role_id, article_id)
 
     for reporter in row[1]["reporters"]:
         if reporter == "":
@@ -104,13 +149,13 @@ df_author_role["role_id"] = df_author_role["role_id"].astype(int)
 
 
 # %%
-df_keywords.to_csv("data/output/keywords.csv")
-df_articles.to_csv("data/output/articles.csv")
-df_article_keyword.to_csv("data/output/article_keyword.csv")
-df_authors.to_csv("data/output/authors.csv")
-df_article_author.to_csv("data/output/article_author.csv")
-df_author_role.to_csv("data/output/author_role.csv")
-df_roles.to_csv("data/output/roles.csv")
+df_keywords.to_csv("data/output/normalized/keywords.csv")
+df_articles.to_csv("data/output/normalized/articles.csv")
+df_article_keyword.to_csv("data/output/normalized/article_keyword.csv")
+df_authors.to_csv("data/output/normalized/authors.csv")
+df_article_author.to_csv("data/output/normalized/article_author.csv")
+df_author_role.to_csv("data/output/normalized/author_role.csv")
+df_roles.to_csv("data/output/normalized/roles.csv")
 
 
 # %%
