@@ -1,6 +1,8 @@
 # %%
+from cgi import test
 import pandas as pd
 import numpy as np
+import re
 
 
 # %%
@@ -11,10 +13,27 @@ def convert_string_to_list(string_input):
                        .split(", ")
 
 
+def clean_author_name(name):
+    idx = re.search("[A-Z]", name)
+    if idx:
+        name = name[idx.start():]
+    name = name.split(". Additional")[0]
+    return name
+
+
+def clean_location_name(location):
+    return location.split(".")[0]
+
+
 def append_author_article_role(name, role_id, article_id):
     global df_authors, df_article_author, df_author_role
+    name = clean_author_name(name)
+    location = ""
+    if " in " in name:
+        name, location = name.split(" in ")
+        location = clean_location_name(location)
     if name not in list(df_authors["name"]):
-        df_authors = df_authors.append({"id":len(df_authors), "name":name}, ignore_index=True)
+        df_authors = df_authors.append({"id":len(df_authors), "name":name, "location": location}, ignore_index=True)
     author_id = df_authors.loc[df_authors["name"]==name]["id"]
     df_article_author = df_article_author.append({"article_id": int(article_id), "author_id": int(author_id)}, ignore_index=True)
     if not (df_author_role == np.array([int(author_id), int(role_id)])).all(1).any():
@@ -84,7 +103,7 @@ df_sub = df_sub.head(100)
 articles = []           # id | date_time | title | description
 article_keyword = []    # article_id | key_word_id
 df_keywords = pd.DataFrame({"id":[], "keyword":[]})
-df_authors = pd.DataFrame({"id":[], "name":[]})
+df_authors = pd.DataFrame({"id":[], "name":[], "location":[]})
 df_article_author = pd.DataFrame({"article_id":[], "author_id":[]})
 df_author_role = pd.DataFrame({"author_id":[], "role_id":[]})
 df_roles = pd.DataFrame({"id":[0, 1, 2, 3], 
@@ -146,6 +165,10 @@ df_article_author["article_id"] = df_article_author["article_id"].astype(int)
 df_article_author["author_id"] = df_article_author["author_id"].astype(int)
 df_author_role["author_id"] = df_author_role["author_id"].astype(int)
 df_author_role["role_id"] = df_author_role["role_id"].astype(int)
+
+
+# %% Drop authors where the name only has one word
+df_authors = df_authors[df_authors["name"].str.split(" ").str.len() >= 2]
 
 
 # %%
