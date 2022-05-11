@@ -52,6 +52,10 @@ def get_main_authors(article_soup):
         return ""
 
 
+def split_author_names(names):
+    return re.split(' and |,and | amd | anf | & |, |,| ad |/| aboard ', names)
+
+
 def get_reporters_writers_and_editors(article_soup):
     try:
         substrings = article_soup.find("body").get_text()
@@ -64,15 +68,15 @@ def get_reporters_writers_and_editors(article_soup):
             if "reporting by" in substring.lower():
                 reporter = re.findall(r"[rR]eporting\sby\s(.*)", substring)
                 if len(reporter) != 0:
-                    reporters.append(re.split(' and | & |, ', reporter[0]))
+                    reporters.append(split_author_names(reporter[0]))
             elif "editing by" in substring.lower():
                 editor = re.findall(r"[eE]diting\sby\s(.*)", substring)
                 if len(editor) != 0:
-                    editors.append(re.split(' and | & |, ', editor[0]))
+                    editors.append(split_author_names(editor[0]))
             elif "writing by" in substring.lower():
                 writer = re.findall(r"[wW]riting\sby\s(.*)", substring)
                 if len(writer) != 0:
-                    writers.append(re.split(' and | & |, ', writer[0]))
+                    writers.append(split_author_names(writer[0]))
         return sum(reporters, []), sum(writers, []), sum(editors, [])
     except:
         return [],[],[]

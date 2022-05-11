@@ -1,5 +1,5 @@
 # %%
-from cgi import test
+from matplotlib.pyplot import text
 import pandas as pd
 import numpy as np
 import re
@@ -17,7 +17,17 @@ def clean_author_name(name):
     idx = re.search("[A-Z]", name)
     if idx:
         name = name[idx.start():]
-    name = name.split(". Additional")[0]
+    name = name.replace(" from ", " in ")
+    name = name.replace(" at the ", " in ")
+    name = name.replace(" is ", " in ")
+    name = name.replace(" In ", " in ")
+    name = name.replace(" on the ", " in ")
+    name = name.replace(" Aboard ", " in ")
+    name = name.replace(")", "")
+    name = name.replace(" and", "")
+    name = name.replace("  ", " ")
+    name = name.split("@")[0]
+
     return name
 
 
@@ -31,14 +41,18 @@ def clean_key_word(key_word):
     key_word = key_word.replace(" (trbc level 2)", "")
     key_word = key_word.replace(" (trbc level 3)", "")
     key_word = key_word.replace(" (trbc level 4)", "")
+    key_word = key_word.replace(" (trbc level 5)", "")
     key_word = key_word.replace(" (trbc)", "")
     key_word = key_word.replace(" (legacy)", "")
+    key_word = key_word.replace(" (nec)", "")
     return key_word
 
 
 def append_author_article_role(name, role_id, article_id):
     global df_authors, df_article_author, df_author_role
     name = clean_author_name(name)
+    if any([x in name.lower() for x in [" by ", "reporting", "newsroom", "writing", "reuters", "bureaux", " team"]]):
+        return
     location = ""
     if " in " in name:
         name_location_split = name.split(" in ")
@@ -105,17 +119,17 @@ df.iloc[24180]["key_words"]
 
 
 # %%
-# Restrict to articles before '2021-04-08'
-df_sub = df[df["article_date_time"] < '2021-04-08']
+# Restrict to articles before '2021-03-23'
+df_sub = df[df["article_date_time"] < '2021-03-23']
 df_sub.tail()
 
 
 # %%
-df_sub = df_sub.head(3000)
+df_sub = df_sub.head(1000)
 
 
 # %%
-articles = []           # id | date_time | title | description
+articles = []           # id | date_time | title | description | text | url
 article_keyword = []    # article_id | key_word_id
 df_keywords = pd.DataFrame({"id":[], "keyword":[]})
 df_authors = pd.DataFrame({"id":[], "name":[], "location":[]})
@@ -134,9 +148,11 @@ for row in df_sub.iterrows():
     article_title = row[1]["title"]
     article_date_time = row[1]["article_date_time"]
     article_description = row[1]["description"]
-    all_article_description = row[1]["description"]
+    article_text = row[1]["text"]
+    article_url = row[1]["url"]
     articles.append({"id": article_id, "datetime": article_date_time, \
-                     "title": article_title, "description": article_description})
+                     "title": article_title, "description": article_description, \
+                     "text": article_text, "url": article_url})
     all_article_keywords = row[1]["key_words"]
 
     for keyword in all_article_keywords:
