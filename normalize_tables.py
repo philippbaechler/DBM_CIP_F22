@@ -18,6 +18,8 @@ def clean_author_name(name):
         name = name[idx.start():]
     name = name.replace(" from ", " in ")
     name = name.replace(" at the ", " in ")
+    name = name.replace(" at ", " in ")
+    name = name.replace(" on ", " in ")
     name = name.replace(" is ", " in ")
     name = name.replace(" In ", " in ")
     name = name.replace(" on the ", " in ")
@@ -27,7 +29,7 @@ def clean_author_name(name):
     name = name.replace("  ", " ")
     name = name.split("@")[0]
 
-    return name
+    return name.strip()
 
 
 def clean_article_text(article_text):
@@ -57,7 +59,9 @@ def clean_key_word(key_word):
 def append_author_article_role(name, role_id, article_id):
     global df_authors, df_article_author, df_author_role
     name = clean_author_name(name)
-    if any([x in name.lower() for x in [" by ", "reporting", "newsroom", "writing", "reuters", "bureaux", " team"]]):
+    if any([x in name.lower() for x in [" by ", "reporting", "newsroom", "writing", "reuters", \
+                                        "bureaux", " team", " times", " added", "allowed", \
+                                        "numbers", "deaths", "deficiencies", "xxx"]]):
         return
     location = ""
     if " in " in name:
@@ -131,7 +135,7 @@ df_sub.tail()
 
 
 # %%
-df_sub = df_sub.head(1000)
+df_sub = df_sub.head(3000)
 
 
 # %%

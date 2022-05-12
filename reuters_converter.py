@@ -53,7 +53,7 @@ def get_main_authors(article_soup):
 
 
 def split_author_names(names):
-    return re.split(' and |,and | amd | anf | & |, |,| ad |/| aboard ', names)
+    return re.split(' and |,and | amd | anf | And | & |, |,| ad |/| aboard ', names)
 
 
 def get_reporters_writers_and_editors(article_soup):
