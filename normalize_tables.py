@@ -1,5 +1,4 @@
 # %%
-from matplotlib.pyplot import text
 import pandas as pd
 import numpy as np
 import re
@@ -29,6 +28,13 @@ def clean_author_name(name):
     name = name.split("@")[0]
 
     return name
+
+
+def clean_article_text(article_text):
+    article_text_split = article_text.split(" - ")
+    if len(article_text_split) > 1:
+        return " - ".join(article_text_split[1:])
+    return article_text
 
 
 def clean_location_name(location):
@@ -92,8 +98,8 @@ df.head()
 
 # %%
 # Check for missing datetimes
-len(df[df["article_date_time"].isnull()])
-len(df)
+print(len(df[df["article_date_time"].isnull()]))
+print(len(df))
 
 
 # %%
@@ -148,7 +154,7 @@ for row in df_sub.iterrows():
     article_title = row[1]["title"]
     article_date_time = row[1]["article_date_time"]
     article_description = row[1]["description"]
-    article_text = row[1]["text"]
+    article_text = clean_article_text(row[1]["text"])
     article_url = row[1]["url"]
     articles.append({"id": article_id, "datetime": article_date_time, \
                      "title": article_title, "description": article_description, \
