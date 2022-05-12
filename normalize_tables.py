@@ -22,6 +22,7 @@ def clean_author_name(name):
     name = name.replace(" on ", " in ")
     name = name.replace(" is ", " in ")
     name = name.replace(" In ", " in ")
+    name = name.replace(" iN ", " in ")
     name = name.replace(" on the ", " in ")
     name = name.replace(" Aboard ", " in ")
     name = name.replace(")", "")
@@ -53,7 +54,7 @@ def clean_key_word(key_word):
     key_word = key_word.replace(" (trbc)", "")
     key_word = key_word.replace(" (legacy)", "")
     key_word = key_word.replace(" (nec)", "")
-    return key_word
+    return key_word.strip()
 
 
 def append_author_article_role(name, role_id, article_id):
@@ -210,7 +211,7 @@ df_author_role["role_id"] = df_author_role["role_id"].astype(int)
 
 
 # %% Drop authors where the name only has one word
-df_authors = df_authors[df_authors["name"].str.split(" ").str.len() >= 2]
+df_authors = df_authors[df_authors["name"].str.split().str.len() >= 2]
 
 
 # %%
@@ -221,6 +222,10 @@ df_authors.to_csv("data/output/normalized/authors.csv")
 df_article_author.to_csv("data/output/normalized/article_author.csv")
 df_author_role.to_csv("data/output/normalized/author_role.csv")
 df_roles.to_csv("data/output/normalized/roles.csv")
+
+
+# %%
+df_authors[df_authors["name"].str.split().str.len() >= 4]
 
 
 # %%

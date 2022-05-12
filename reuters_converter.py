@@ -14,6 +14,37 @@ articles_html = [f for f in glob.glob(path_to_data + "**/**/*.html", recursive=T
 print(len(articles_html))
 
 
+# %%
+fix_name_dict = {"Roberta Rampton Susan Cornwell": "Roberta Rampton, Susan Cornwell",
+                 "Steve Holland Amanda Becker": "Steve Holland, Amanda Becker",
+                 "Emily Stephenson Timothy Ahmann": "Emily Stephenson, Timothy Ahmann",
+                 "Caren Bohan David Brunnstrom": "Caren Bohan, David Brunnstrom",
+                 "Amy Tennery Luciana Lopez": "Amy Tennery, Luciana Lopez",
+                 "Sandra Maler Simon Cameron-Moore": "Sandra Maler, Simon Cameron-Moore",
+                 "Amanda Becker Yasmeen Abutaleb": "Amanda Becker, Yasmeen Abutaleb",
+                 "Nathan Layne Karen Freifeld": "Nathan Layne, Karen Freifeld",
+                 "Phil Berlowitzand Leslie Adler": "Phil Berlowitzand, Leslie Adler",
+                 "Sarah N. Lynch Mark Hosenball": "Sarah N. Lynch, Mark Hosenball",
+                 "Cynthia Ostermanand Leslie Adler": "Cynthia Ostermanand, Leslie Adler",
+                 "David Lawder Timothy Gardner": "David Lawder, Timothy Gardner",
+                 "Alaa Swilam Nayera Abdallah": "Alaa Swilam, Nayera Abdallah",
+                 "Rosalba O’Brienand Nick Zieminski": "Rosalba O’Brienand, Nick Zieminski",
+                 "Yuka Obayashi Tim Kelly": "Yuka Obayashi, Tim Kelly",
+                 "Tom Lasseter Julie Marquis": "Tom Lasseter, Julie Marquis",
+                 "Noel Randewichin San Francisco": "Noel Randewichin in San Francisco",
+                 "Gabrielle Tétrault-Farber Anton Kolodyazhnyy": "Gabrielle Tétrault-Farber, Anton Kolodyazhnyy",
+                 "Bernadette Baumand Tom Brown": "Bernadette Baumand, Tom Brown",
+                 "Peter Szekely Maria Caspani": "Peter Szekely, Maria Caspani",
+                 "Tom Daly Gabriel Crossley": "Tom Daly, Gabriel Crossley",
+                 "Abdel Nasser Aboul el-Fadl": "Abdel Nasser, Aboul el-Fadl",
+                 "Susana Vera Guillermo Martinez": "Susana Vera, Guillermo Martinez",
+                 "David Brunnstrom Jonathan Landay": "David Brunnstrom, Jonathan Landay",
+                 "Jack Tarrant Mitch Phillips": "Jack Tarrant, Mitch Phillips",
+                 "Pete Schroeder Svea Herbst-Bayliss": "Pete Schroeder, Svea Herbst-Bayliss",
+                 "Andrea Shalal Jonathan Landay": "Andrea Shalal, Jonathan Landay",
+                 "Ana Nicolaci da COsta": "Ana Nicolaci da Costa"}
+
+
 #%%
 def get_key_words(article_soup):
     try:
@@ -53,7 +84,10 @@ def get_main_authors(article_soup):
 
 
 def split_author_names(names):
-    return re.split(' and |,and | amd | anf | And | & |, |,| ad |/| aboard ', names)
+    for key, value in fix_name_dict.items():
+        if key in names:
+            names = names.replace(key, value)
+    return re.split(' and |,and | amd | anf | And | abd | ad | & |, |,|，|/| aboard ', names)
 
 
 def get_reporters_writers_and_editors(article_soup):
