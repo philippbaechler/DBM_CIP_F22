@@ -1,4 +1,23 @@
-#%%
+# #
+# This script helps to extract features from the previously scraped article html files.
+# These features are then stored in a single table: data/output/reuters.csv
+#  
+# The target features are as following: 
+# - article_date_time   : publication date time
+# - title
+# - description
+# - main_author
+# - reporters
+# - writers
+# - editors
+# - content_channel     : genre
+# - key_words
+# - text
+# - url
+# #
+
+
+# %%
 import os
 import re
 import pandas as pd
@@ -7,14 +26,19 @@ from bs4 import BeautifulSoup as bs
 from helper_converter import *
 
 
-#%%
+# %%
+# The articles_html is a list which contains all the paths to the html files which are 
+# located in data/raw/reuters/.
 curren_dir = os.path.abspath(os.getcwd())
-path_to_data = "data/raw/reuters_old/1/"
+path_to_data = "data/raw/reuters/"
 articles_html = [f for f in glob.glob(path_to_data + "**/**/*.html", recursive=True)]
 print(len(articles_html))
 
 
 # %%
+# Some cleaning had to be done by hand. This can be for example when the author name consists
+# of four names but it should have been two persones with each first and last name. This dictionary 
+# "translates" the faulty strings. 
 fix_name_dict = {"Roberta Rampton Susan Cornwell": "Roberta Rampton, Susan Cornwell",
                  "Steve Holland Amanda Becker": "Steve Holland, Amanda Becker",
                  "Emily Stephenson Timothy Ahmann": "Emily Stephenson, Timothy Ahmann",
@@ -45,7 +69,12 @@ fix_name_dict = {"Roberta Rampton Susan Cornwell": "Roberta Rampton, Susan Cornw
                  "Ana Nicolaci da COsta": "Ana Nicolaci da Costa"}
 
 
-#%%
+# %%
+# For each feature we want to extract is here a short function defined. As it might be that some
+# html pages are structured different or that some elements cannot be found on the page, we use
+# the "try - except" functionality on each function. If something did not work as expected, we
+# simply return an NaN, [] or "".  
+
 def get_key_words(article_soup):
     try:
         return article_soup.find("meta", attrs={'name':'keywords'}).attrs["content"].split(",")
@@ -91,6 +120,9 @@ def split_author_names(names):
 
 
 def get_reporters_writers_and_editors(article_soup):
+    # In the end of almost each article a line of attribution like the following can be found. 
+    # "Reporting by Brenda Goh, Albee Zhang and Tony Munroe; Writing by Justyna Pawlak; Editing by William Mallard, William Maclean"
+    # This function returns a lists for reporters, writers and editors. 
     try:
         substrings = article_soup.find("body").get_text()
         substrings = re.split('\n|; |Our Standards', substrings)
@@ -159,10 +191,13 @@ def get_article_id(article_url):
 
 
 # %%
+# Here we loop over the list of article htmls, open it and extract the desired features by calling the previously
+# defined functions. For each article all features are combined in a dictionary and appended to the articles list. 
+
 articles = []
 
 for idx, article in enumerate(articles_html):
-    if idx >= 1000:
+    if idx >= 1000: # for debugging
         break
     with open(article) as data:
         data = data.read()
@@ -185,12 +220,14 @@ for idx, article in enumerate(articles_html):
 
 
 # %%
+# Convert the articles into an pandas dataframe.
 df = pd.DataFrame(articles)
 df = df.astype(str).drop_duplicates().reset_index(drop=True)
 df.head(10)
 
 
 # %%
+# Save the dataframe in a csv.
 df.to_csv("data/output/reuters_sample.csv")
 
 

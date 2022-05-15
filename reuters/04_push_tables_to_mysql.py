@@ -13,8 +13,7 @@ df_keywords = pd.read_csv("data/output/normalized/keywords.csv", index_col=0)
 df_roles = pd.read_csv("data/output/normalized/roles.csv", index_col=0)
 
 
-# %%
-# pip install PyMySQL
+# %% connect to mysql data base
 usr = "root"
 passwd = ""
 constring = f'mysql+pymysql://{usr}:{passwd}@localhost/'

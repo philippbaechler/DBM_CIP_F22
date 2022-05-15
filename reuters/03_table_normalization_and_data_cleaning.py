@@ -108,7 +108,7 @@ print(len(df))
 
 
 # %%
-# As we have only three missing lines in 40991 observations, we simply delete these
+# As we have only three missing lines in 40994 observations, we simply delete these
 df = df[df["article_date_time"].notnull()]
 
 
@@ -126,17 +126,19 @@ df.iloc[24161]["key_words"]
 
 # %%
 # example keywords after 2021-04-09
+# Obviously reuters use since April 2021 abbrevations for theyr keywords.
 df.iloc[24180]["key_words"]
 
 
 # %%
-# Restrict to articles before '2021-03-23'
+# As we have no idea, what these abbrevations mean we restrict our dataset to 
+# articles before '2021-03-23'.
 df_sub = df[df["article_date_time"] < '2021-03-23']
 df_sub.tail()
 
 
-# %%
-df_sub = df_sub.head(3000)
+# %% for debugging
+df_sub = df_sub.head(1000)
 
 
 # %%

@@ -4,20 +4,11 @@ import pandas as pd
 import numpy as np
 
 
-# %%
+# %% Load the authors and article_author table
+# The article_author holds the information which author worked on which article.
+# The authors table holds the author names
 df_article_author = pd.read_csv("data/output/normalized/article_author.csv", index_col=0)
 df_authors = pd.read_csv("data/output/normalized/authors.csv", index_col=0)
-
-
-# %%
-df_article_author.head(50)
-
-# %%
-df_authors.head(10)
-
-
-# %%
-df_article_author.join(df_authors, lsuffix="_caller", rsuffix="_other", on="author_id").head(50)
 
 
 # %%
@@ -29,9 +20,16 @@ def increment_edges(a, b):
 
 
 # %%
+# For counting how many times each author worked with each other we create 
+# a dictionary like this: {'0 - 1': 1, '2 - 3': 2, '4 - 5': 2, ...}
+# We loop over each article, get the list of authors, and loop twice (nested)
+# over this list. To make sure that we do not get double entries, we save the
+# entries where the first index is smaller than the second.
+# Example double entry: {'0 - 1': 1, '1 - 0': 1}
+
 author_edges = {}
 for idx in df_article_author["article_id"].unique():
-    if idx >= 5000:
+    if idx >= 200:
         break
     df_idx_aa = df_article_author.loc[df_article_author["article_id"] == idx]
     sorted_author_list = sorted(list(dict.fromkeys(df_idx_aa["author_id"])))
@@ -40,12 +38,17 @@ for idx in df_article_author["article_id"].unique():
         for b in sorted_author_list:
             if a < b:
                 increment_edges(a, b)
-
-
-# %%
 author_edges
 
 # %%
+# The previously prepared dictionary is now converted to an data frame. For this
+# we split the key into source and target index. The data frame looks like this:
+#  
+# 	source	target	weight
+# 0	     0	     1	     1
+# 1	     2	     3       2
+# ...
+
 author_edges_cleaned = []
 for key, value in author_edges.items():
     a,b = key.split(" - ")
@@ -57,6 +60,9 @@ df_edges
 
 
 # %%
+# Here we exchange the author id's with their names. This will allow us to display
+# their names later in the network plot.
+
 df_edges_joined = df_edges.join(df_authors, on="source")
 df_edges_joined = df_edges_joined.drop(["source", "id", "location"], axis=1)
 df_edges_joined = df_edges_joined.rename(columns={"name": "source"})
@@ -68,18 +74,20 @@ df_edges_joined = df_edges_joined.rename(columns={"name": "target"})
 df_edges_joined.head()
 
 
-# %%
+# %% Setup for the network plot
 from pyvis.network import Network
 net = Network(height='100%', width='100%', bgcolor='#222222', font_color='white')
 net.force_atlas_2based()
 
+
+# %%
 for row in df_edges_joined.iterrows():
     src = str(row[1]["source"])
     dst = str(row[1]["target"])
     wgt = row[1]["weight"]
     net.add_node(n_id=src, title=src)
     net.add_node(n_id=dst, title=dst)
-    net.add_edge(src, dst, springLength=10000000/(float(wgt)**2), value=float(wgt))
+    net.add_edge(src, dst, value=float(wgt))
 
 
 # %%
@@ -125,7 +133,7 @@ var options = {
 }
 """)
 #net.show_buttons(filter_=['physics'])
-net.show("example.html")
+net.show("data/example.html")
 
 
 # %%
