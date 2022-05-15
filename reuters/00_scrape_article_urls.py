@@ -60,7 +60,7 @@ df.head()
 
 # %%
 # Save the dataframe in a csv.
-df.to_csv("data/all_links.csv")
+df.to_csv("../data/all_links.csv")
 
 
 # %%

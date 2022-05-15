@@ -6,7 +6,7 @@ import pandas as pd
 
 # %%
 # Load the table wich contains all the article urls.
-all_links = pd.read_csv("data/all_links.csv", index_col=0)
+all_links = pd.read_csv("../data/all_links.csv", index_col=0)
 print(len(all_links))
 all_links.head()
 
@@ -33,7 +33,7 @@ for idx, url in enumerate(all_links["url"]):
     raw_html = requests.get(url, headers=headers)
     soup = bs(raw_html.content, "html.parser")
     html_page = soup.prettify()
-    file_path = "data/raw/reuters/" + url.split("/")[-1] + ".html"
+    file_path = "../data/raw/reuters/" + url.split("/")[-1] + ".html"
     file = open(file_path, "w+")
     file.write(html_page)
     file.close()

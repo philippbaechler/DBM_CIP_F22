@@ -30,7 +30,7 @@ from helper_converter import *
 # The articles_html is a list which contains all the paths to the html files which are 
 # located in data/raw/reuters/.
 curren_dir = os.path.abspath(os.getcwd())
-path_to_data = "data/raw/reuters/"
+path_to_data = "../data/raw/reuters/"
 articles_html = [f for f in glob.glob(path_to_data + "**/**/*.html", recursive=True)]
 print(len(articles_html))
 
@@ -228,7 +228,7 @@ df.head(10)
 
 # %%
 # Save the dataframe in a csv.
-df.to_csv("data/output/reuters_sample.csv")
+df.to_csv("../data/output/reuters_sample.csv")
 
 
 # %%

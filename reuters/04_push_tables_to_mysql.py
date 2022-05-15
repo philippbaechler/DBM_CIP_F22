@@ -4,13 +4,13 @@ import sqlalchemy
 
 
 # %% load data frame
-df_article_author = pd.read_csv("data/output/normalized/article_author.csv", index_col=0)
-df_article_keyword = pd.read_csv("data/output/normalized/article_keyword.csv", index_col=0)
-df_articles = pd.read_csv("data/output/normalized/articles.csv", index_col=0)
-df_author_role = pd.read_csv("data/output/normalized/author_role.csv", index_col=0)
-df_authors = pd.read_csv("data/output/normalized/authors.csv", index_col=0)
-df_keywords = pd.read_csv("data/output/normalized/keywords.csv", index_col=0)
-df_roles = pd.read_csv("data/output/normalized/roles.csv", index_col=0)
+df_article_author = pd.read_csv("../data/output/normalized/article_author.csv", index_col=0)
+df_article_keyword = pd.read_csv("../data/output/normalized/article_keyword.csv", index_col=0)
+df_articles = pd.read_csv("../data/output/normalized/articles.csv", index_col=0)
+df_author_role = pd.read_csv("../data/output/normalized/author_role.csv", index_col=0)
+df_authors = pd.read_csv("../data/output/normalized/authors.csv", index_col=0)
+df_keywords = pd.read_csv("../data/output/normalized/keywords.csv", index_col=0)
+df_roles = pd.read_csv("../data/output/normalized/roles.csv", index_col=0)
 
 
 # %% connect to mysql data base

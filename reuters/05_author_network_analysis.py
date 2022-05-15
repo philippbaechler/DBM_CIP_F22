@@ -7,8 +7,8 @@ import numpy as np
 # %% Load the authors and article_author table
 # The article_author holds the information which author worked on which article.
 # The authors table holds the author names
-df_article_author = pd.read_csv("data/output/normalized/article_author.csv", index_col=0)
-df_authors = pd.read_csv("data/output/normalized/authors.csv", index_col=0)
+df_article_author = pd.read_csv("../data/output/normalized/article_author.csv", index_col=0)
+df_authors = pd.read_csv("../data/output/normalized/authors.csv", index_col=0)
 
 
 # %%
@@ -29,8 +29,8 @@ def increment_edges(a, b):
 
 author_edges = {}
 for idx in df_article_author["article_id"].unique():
-    if idx >= 200:
-        break
+    # if idx >= 200:
+    #     break
     df_idx_aa = df_article_author.loc[df_article_author["article_id"] == idx]
     sorted_author_list = sorted(list(dict.fromkeys(df_idx_aa["author_id"])))
 
