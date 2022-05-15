@@ -72,6 +72,8 @@ def append_author_article_role(name, role_id, article_id):
             location = clean_location_name(location)
         else:
             return
+    if len(name.split()) < 2:
+        return
     if name not in list(df_authors["name"]):
         df_authors = df_authors.append({"id":len(df_authors), "name":name, "location": location}, ignore_index=True)
     author_id = df_authors.loc[df_authors["name"]==name]["id"]
@@ -81,7 +83,7 @@ def append_author_article_role(name, role_id, article_id):
 
 
 # %%
-df = pd.read_csv("data/output/reuters_dirty.csv", index_col=0, \
+df = pd.read_csv("../data/output/reuters_src.csv", index_col=0, \
                  converters={"key_words": convert_string_to_list, \
                              "main_author": convert_string_to_list, \
                              "reporters": convert_string_to_list, \
@@ -138,7 +140,7 @@ df_sub.tail()
 
 
 # %% for debugging
-df_sub = df_sub.head(1000)
+#df_sub = df_sub.head(1000)
 
 
 # %%
@@ -212,18 +214,14 @@ df_author_role["author_id"] = df_author_role["author_id"].astype(int)
 df_author_role["role_id"] = df_author_role["role_id"].astype(int)
 
 
-# %% Drop authors where the name only has one word
-df_authors = df_authors[df_authors["name"].str.split().str.len() >= 2]
-
-
 # %%
-df_keywords.to_csv("data/output/normalized/keywords.csv")
-df_articles.to_csv("data/output/normalized/articles.csv")
-df_article_keyword.to_csv("data/output/normalized/article_keyword.csv")
-df_authors.to_csv("data/output/normalized/authors.csv")
-df_article_author.to_csv("data/output/normalized/article_author.csv")
-df_author_role.to_csv("data/output/normalized/author_role.csv")
-df_roles.to_csv("data/output/normalized/roles.csv")
+df_keywords.to_csv("../data/output/normalized/keywords.csv")
+df_articles.to_csv("../data/output/normalized/articles.csv")
+df_article_keyword.to_csv("../data/output/normalized/article_keyword.csv")
+df_authors.to_csv("../data/output/normalized/authors.csv")
+df_article_author.to_csv("../data/output/normalized/article_author.csv")
+df_author_role.to_csv("../data/output/normalized/author_role.csv")
+df_roles.to_csv("../data/output/normalized/roles.csv")
 
 
 # %%
