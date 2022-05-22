@@ -1,20 +1,23 @@
-# #
-# This script helps to extract features from the previously scraped article html files.
-# These features are then stored in a single table: data/output/reuters.csv
-#  
-# The target features are as following: 
-# - article_date_time   : publication date time
-# - title
-# - description
-# - main_author
-# - reporters
-# - writers
-# - editors
-# - content_channel     : genre
-# - key_words
-# - text
-# - url
-# #
+#!/usr/bin/env python3
+'''Extracts features from previously downloaded html files and saves them on the table "reuters_src.csv".
+
+The target features are: article_date_time, title, description, main_author, reporters, writers, editors, content_channel, key_words, text, url
+
+Usage:
+    $ python3 02_feature_extraction.py
+    or 
+    $ chmod +x 02_feature_extraction.py
+    $ ./02_feature_extraction.py
+
+Author:
+    Philipp Bächler - 22.5.2022
+
+License:
+    "THE BEER-WARE LICENSE" (Revision 42):
+    philipp.baechler@gmail.com wrote this file. As long as you retain this notice
+    you can do whatever you want with this stuff. If we meet some day, and you 
+    think this stuff is worth it, you can buy me a beer in return.
+'''
 
 
 # %%
@@ -35,9 +38,9 @@ print(len(articles_html))
 
 
 # %%
-# Some cleaning had to be done by hand. This can be for example when the author name consists
+# Some cleaning steps had to be done by hand. This can be for example when the author name consists
 # of four names but it should have been two persones with each first and last name. This dictionary 
-# "translates" the faulty strings. 
+# "translates" the faulty strings which were found in the 40'000 articles
 fix_name_dict = {"Roberta Rampton Susan Cornwell": "Roberta Rampton, Susan Cornwell",
                  "Steve Holland Amanda Becker": "Steve Holland, Amanda Becker",
                  "Emily Stephenson Timothy Ahmann": "Emily Stephenson, Timothy Ahmann",

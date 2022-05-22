@@ -1,3 +1,23 @@
+#!/usr/bin/env python3
+'''Pushes the normalized tables to the SQL data base.
+
+Usage:
+    $ python3 04_push_tables_to_mysql.py
+    or 
+    $ chmod +x 04_push_tables_to_mysql.py
+    $ ./04_push_tables_to_mysql.py
+
+Author:
+    Philipp Bächler - 22.5.2022
+
+License:
+    "THE BEER-WARE LICENSE" (Revision 42):
+    philipp.baechler@gmail.com wrote this file. As long as you retain this notice
+    you can do whatever you want with this stuff. If we meet some day, and you 
+    think this stuff is worth it, you can buy me a beer in return.
+'''
+
+
 # %%
 import pandas as pd
 import sqlalchemy

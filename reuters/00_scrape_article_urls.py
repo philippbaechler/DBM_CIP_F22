@@ -1,3 +1,23 @@
+#!/usr/bin/env python3
+'''Collects all article URLs from www.reuters.com/news/archive and saves them on the table "all_links.csv".
+
+Usage:
+    $ python3 00_scrape_article_urls.py
+    or 
+    $ chmod +x 00_scrape_article_urls.py
+    $ ./00_scrape_article_urls.py
+
+Author:
+    Philipp Bächler - 22.5.2022
+
+License:
+    "THE BEER-WARE LICENSE" (Revision 42):
+    philipp.baechler@gmail.com wrote this file. As long as you retain this notice
+    you can do whatever you want with this stuff. If we meet some day, and you 
+    think this stuff is worth it, you can buy me a beer in return.
+'''
+
+
 # %%
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -50,6 +70,9 @@ for idx in range(1789, 1793, 1):
     url = f'https://www.reuters.com/news/archive?view=page&page={idx}&pageSize=10'
     all_links.extend(get_articles_from_page(driver, url))
 
+
+# %%
+driver.close()
 
 # %%
 # Convert the all_links list into an pandas dataframe.

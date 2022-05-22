@@ -1,3 +1,23 @@
+#!/usr/bin/env python3
+'''Creates a networkplot of the authors based on the normalized tables.
+
+Usage:
+    $ python3 05_author_network_analysis.py
+    or 
+    $ chmod +x 05_author_network_analysis.py
+    $ ./05_author_network_analysis.py
+
+Author:
+    Philipp Bächler - 22.5.2022
+
+License:
+    "THE BEER-WARE LICENSE" (Revision 42):
+    philipp.baechler@gmail.com wrote this file. As long as you retain this notice
+    you can do whatever you want with this stuff. If we meet some day, and you 
+    think this stuff is worth it, you can buy me a beer in return.
+'''
+
+
 # %%
 from pyvis.network import Network
 import pandas as pd
@@ -14,7 +34,7 @@ df_authors = pd.read_csv("../data/output/normalized/authors.csv", index_col=0)
 df_article_author.head(20)
 
 # %%
-def increment_edges(a, b):
+def increment_edge(a, b):
     if f"{a} - {b}" not in author_edges:
         author_edges[f"{a} - {b}"] = 1
     else:
@@ -39,7 +59,7 @@ for idx in df_article_author["article_id"].unique():
     for a in sorted_author_list:
         for b in sorted_author_list:
             if a < b:
-                increment_edges(a, b)
+                increment_edge(a, b)
 author_edges
 
 # %%

@@ -1,3 +1,23 @@
+#!/usr/bin/env python3
+'''Creates normalized tables form "reuters_src.csv" which can be pushed to the SQL data base.
+
+Usage:
+    $ python3 03_table_normalization_and_data_cleaning.py
+    or 
+    $ chmod +x 03_table_normalization_and_data_cleaning.py
+    $ ./03_table_normalization_and_data_cleaning.py
+
+Author:
+    Philipp Bächler - 22.5.2022
+
+License:
+    "THE BEER-WARE LICENSE" (Revision 42):
+    philipp.baechler@gmail.com wrote this file. As long as you retain this notice
+    you can do whatever you want with this stuff. If we meet some day, and you 
+    think this stuff is worth it, you can buy me a beer in return.
+'''
+
+
 # %%
 import pandas as pd
 import numpy as np
