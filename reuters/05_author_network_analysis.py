@@ -1,7 +1,6 @@
 # %%
-from matplotlib.pyplot import title
+from pyvis.network import Network
 import pandas as pd
-import numpy as np
 
 
 # %% Load the authors and article_author table
@@ -10,6 +9,9 @@ import numpy as np
 df_article_author = pd.read_csv("../data/output/normalized/article_author.csv", index_col=0)
 df_authors = pd.read_csv("../data/output/normalized/authors.csv", index_col=0)
 
+
+# %%
+df_article_author.head(20)
 
 # %%
 def increment_edges(a, b):
@@ -29,8 +31,8 @@ def increment_edges(a, b):
 
 author_edges = {}
 for idx in df_article_author["article_id"].unique():
-    # if idx >= 200:
-    #     break
+    if idx >= 200: # debugging
+        break
     df_idx_aa = df_article_author.loc[df_article_author["article_id"] == idx]
     sorted_author_list = sorted(list(dict.fromkeys(df_idx_aa["author_id"])))
 
@@ -75,7 +77,6 @@ df_edges_joined.head()
 
 
 # %% Setup for the network plot
-from pyvis.network import Network
 net = Network(height='100%', width='100%', bgcolor='#222222', font_color='white')
 net.force_atlas_2based()
 
@@ -132,6 +133,7 @@ var options = {
   }
 }
 """)
+
 #net.show_buttons(filter_=['physics'])
 net.show("data/example.html")
 

@@ -83,7 +83,7 @@ def append_author_article_role(name, role_id, article_id):
 
 
 # %%
-df = pd.read_csv("../data/output/reuters_src.csv", index_col=0, \
+df = pd.read_csv("../data/output/reuters_dirty.csv", index_col=0, \
                  converters={"key_words": convert_string_to_list, \
                              "main_author": convert_string_to_list, \
                              "reporters": convert_string_to_list, \
@@ -140,7 +140,7 @@ df_sub.tail()
 
 
 # %% for debugging
-#df_sub = df_sub.head(1000)
+df_sub = df_sub.head(500)
 
 
 # %%
