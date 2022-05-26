@@ -2,14 +2,7 @@
 import pandas as pd
 from datetime import datetime
 from matplotlib import pyplot as plt
-
-
-# %%
-def convert_string_to_list(string_input):
-    return string_input.replace("'", "")\
-                       .replace("[", "")\
-                       .replace("]", "")\
-                       .split(", ")
+from reuters_analysis import convert_string_to_list
 
 
 # %%
