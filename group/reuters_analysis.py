@@ -149,3 +149,6 @@ plt.plot(df_occurences["year_month"], df_occurences["occurences"]/number_of_arti
 plt.legend(["Bitcoin", "Tesla", "Twitter", "Google", "Facebook", "Microsoft", "Apple"])
 plt.ylabel("Percentage of Articles")
 plt.savefig("techCompanies.pdf")
+
+
+
