@@ -27,11 +27,13 @@ def clean_duplicates(df):
         :param: df entry dataframe
         :return: Dataframe with randomly inserted Nan values
         """
+
+    df = df[~df.duplicated(subset=['Date'], keep='first')]
     # check for duplicates and keep first entry, delete rest
     df = df[~df.duplicated(keep='first')]
 
     # check if there are any left (should be 0)
-    print(len(df[df.duplicated()]))
+    print(f'Duplicates after cleaning: {len(df[df.duplicated()])}')
     return df
 
 
@@ -167,20 +169,20 @@ df = df.loc[:, f]
 
 # %%
 # Check for duplicates.
-print(len(df[df.duplicated()]))
+print(f'duplicates: {len(df[df.duplicated()])}')
 
 # As there are duplicates, clean/drop them
 df = clean_duplicates(df)
 
 # %%
 # Check for missing date entries
-print(len(df[df["Date"].isnull()]))
+print(f'Missing Date entries: {len(df[df["Date"].isnull()])}')
 
 # Date entry is most important for later merging with other Datasets, so must be continous.
 df = clean_missing_date(df)
 
 # no Missing Date entries anymore
-print(len(df[df["Date"].isnull()]))
+print(f'Missing Date entries after cleaning: {len(df[df["Date"].isnull()])}')
 
 # %%
 # Check for missing entries

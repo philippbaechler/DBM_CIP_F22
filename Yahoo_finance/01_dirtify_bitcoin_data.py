@@ -168,10 +168,10 @@ def df_duplicate_rows(dataframe, rndstate=None):
 # Preparation
 # get current working directory
 current_dir = os.path.abspath(os.getcwd())
-input_dir = os.path.join(current_dir, '../data/input')
+input_dir = os.path.join(current_dir, '../data/input/source')
 
 # Loading of dataset. Load empty dataset if File not found
-file ='btc_5y1d.csv'
+file ='Yahoo_BTC_src.csv'
 try:
     df = pd.read_csv(os.path.join(input_dir, file))
 except FileNotFoundError:
