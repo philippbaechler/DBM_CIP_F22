@@ -54,7 +54,7 @@ fix_name_dict = {"Roberta Rampton Susan Cornwell": "Roberta Rampton, Susan Cornw
                  "Cynthia Ostermanand Leslie Adler": "Cynthia Ostermanand, Leslie Adler",
                  "David Lawder Timothy Gardner": "David Lawder, Timothy Gardner",
                  "Alaa Swilam Nayera Abdallah": "Alaa Swilam, Nayera Abdallah",
-                 "Rosalba O’Brienand Nick Zieminski": "Rosalba O’Brienand, Nick Zieminski",
+                 "Rosalba O’Brienand Nick Zieminski": "Rosalba O'Brienand, Nick Zieminski",
                  "Yuka Obayashi Tim Kelly": "Yuka Obayashi, Tim Kelly",
                  "Tom Lasseter Julie Marquis": "Tom Lasseter, Julie Marquis",
                  "Noel Randewichin San Francisco": "Noel Randewichin in San Francisco",
@@ -66,9 +66,40 @@ fix_name_dict = {"Roberta Rampton Susan Cornwell": "Roberta Rampton, Susan Cornw
                  "Susana Vera Guillermo Martinez": "Susana Vera, Guillermo Martinez",
                  "David Brunnstrom Jonathan Landay": "David Brunnstrom, Jonathan Landay",
                  "Jack Tarrant Mitch Phillips": "Jack Tarrant, Mitch Phillips",
+                 "Joao Manuel Vicente Mauricio": "Joao Manuel, Vicente Mauricio",
                  "Pete Schroeder Svea Herbst-Bayliss": "Pete Schroeder, Svea Herbst-Bayliss",
                  "Andrea Shalal Jonathan Landay": "Andrea Shalal, Jonathan Landay",
-                 "Ana Nicolaci da COsta": "Ana Nicolaci da Costa"}
+                 "Ana Nicolaci da COsta": "Ana Nicolaci da Costa",
+                 "Christinne Muschi Montreal": "Christinne Muschi in Montreal",
+                 "Bill Berkrot Jonathan Oatis": "Bill Berkrot, Jonathan Oatis",
+                 "Saumyadeb Chakrabarty Maju Samuel": "Saumyadeb Chakrabarty, Maju Samuel",
+                 "Caroline Stauffer Matthew Lewis": "Caroline Stauffer Matthew Lewis",
+                 "Adrian Portugal Peter Blaza": "Adrian Portugal, Peter Blaza	",
+                 "Lisa Lambert David Morgan": "Lisa Lambert, David Morgan",
+                 "Angus MacSwan Giles Elgood": "Angus MacSwan, Giles Elgood",
+                 "Michael Erman iNew Jersey": "Michael Erman in New Jersey",
+                 "Kirsten Donovan Muralikumar Anantharaman": "Kirsten Donovan, Muralikumar Anantharaman",
+                 "Steve Holland Trevor Hunnicutt": "Steve Holland, Trevor Hunnicutt",
+                 "David Shepardson Jonathan Landay": "David Shepardson, Jonathan Landay",
+                 "Jonathan Oatisand Jonathan Oatis": "Jonathan Oatis",
+                 "Vanessa OConnell Nick Zieminski": "Vanessa OConnell, Nick Zieminski",
+                 "Peter Cooneyand Peter Cooney": "Peter Cooney",
+                 "Doina Chiacu Susan Cornwell": "Doina Chiacu, Susan Cornwell",
+                 "Angelo Amante Crispian Balmer": "Angelo Amante, Crispian Balmer",
+                 "Cecile Mantovani Ayenat Mersie": "Cecile Mantovani, Ayenat Mersie",
+                 "Kate Holton James Davey": "Kate Holton, James Davey",
+                 "Anil DSilva Josephine Mason": "Anil DSilva, Josephine Mason",
+                 "Hugh Lawson Mark Potter": "Hugh Lawson, Mark Potter",
+                 "Laila Bassam Yasmin Hussein": "Laila Bassam, Yasmin Hussein",
+                 "Matthew Lewisand Peter Cooney": "Matthew Lewisand, Peter Cooney",
+                 "Mary Millikenm Grant McCool": "Mary Millikenm, Grant McCool",
+                 "Mariya Gordeeva Robin Paxton": "Mariya Gordeeva, Robin Paxton",
+                 "Steve Holland Nandita Bose": "Steve Holland, Nandita Bose",
+                 "Dan Whitcomb Rajesh Kumar Singh": "Dan Whitcomb, Rajesh Kumar Singh",
+                 "Suleiman Al-Khalidi Nandita Bose": "Suleiman Al-Khalidi, Nandita Bose",
+                 "Maju Samuel Aditya Soni": "Maju Samuel, Aditya Soni",
+                 "Bryan Woolston Kacper Pempel": "Bryan Woolston, Kacper Pempel",
+                 "Susanne Neumayer-Remter Tanya Wood Petra Wischgoll": "Susanne Neumayer-Remter, Tanya Wood, Petra Wischgoll"}
 
 
 # %%
@@ -149,7 +180,7 @@ def split_author_names(names):
     for key, value in fix_name_dict.items():
         if key in names:
             names = names.replace(key, value)
-    return re.split(' and |,and | amd | anf | And | abd | ad | & |, |,|，|/| aboard ', names)
+    return re.split(' and |,and | amd | anf | anfd | And | nd | nad | abd | asnd | ad | an | & |, |,|，|/| aboard ', names)
 
 
 def get_reporters_writers_and_editors(article_soup):

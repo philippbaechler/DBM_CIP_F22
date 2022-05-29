@@ -48,6 +48,9 @@ def clean_author_name(name):
     name = name.replace(")", "")
     name = name.replace(" and", "")
     name = name.replace("  ", " ")
+    name = name.replace("\"", "")
+    name = name.replace(";", "")
+    name = name.replace("#", "")
     name = name.split("@")[0]
 
     return name.strip()
@@ -82,7 +85,10 @@ def append_author_article_role(name, role_id, article_id):
     name = clean_author_name(name)
     if any([x in name.lower() for x in [" by ", "reporting", "newsroom", "writing", "reuters", \
                                         "bureaux", " team", " times", " added", "allowed", \
-                                        "numbers", "deaths", "deficiencies", "xxx"]]):
+                                        "numbers", "deaths", "deficiencies", "xxx", "meeting", \
+                                        "bureau", "staff", "reports", "bureaus", "journalism", \
+                                        "agencies", "assumptions", " year", "according", "economic", \
+                                        "billionaires", "media", "report"]]):
         return
     location = ""
     if " in " in name:
@@ -262,7 +268,7 @@ df_companies.to_csv("../data/output/normalized/companies.csv")
 
 
 # %%
-df_authors[df_authors["name"].str.split().str.len() >= 4]
+print(df_authors[df_authors["name"].str.split().str.len() >= 4].tail(60))
 
 
 # %%
