@@ -101,12 +101,13 @@ def append_author_article_role(name, role_id, article_id):
 
 
 # %%
-df = pd.read_csv("../data/output/reuters_dirty.csv", index_col=0, \
+df = pd.read_csv("../data/output/combined_src.csv", index_col=0, \
                  converters={"key_words": convert_string_to_list, \
                              "main_author": convert_string_to_list, \
                              "reporters": convert_string_to_list, \
                              "writers": convert_string_to_list, \
-                             "editors": convert_string_to_list})
+                             "editors": convert_string_to_list, \
+                             "content_channel": convert_string_to_list})
 df.head(5)
 
 
@@ -158,17 +159,21 @@ df_sub.tail()
 
 
 # %% for debugging
-df_sub = df_sub.head(500)
-
+#df_sub = df_sub.tail(2000)
+df_sub = df
 
 # %%
 articles = [] # id | date_time | title | description | text | url
 article_keyword = [] # article_id | key_word_id
 keywords = {} # id | keyword
+article_category = [] # article_id | category_id
+categories = {} # id | category
 df_authors = pd.DataFrame({"id":[], "name":[], "location":[]})
 article_author_role = [] # article_id | author_id | role_id
 df_roles = pd.DataFrame({"id":[0, 1, 2, 3], 
                          "role":["main_author", "reporter", "writer", "editor"]})
+df_companies = pd.DataFrame({"id":[0, 1], "name":["Thompson and Reuters", "Kyodo News"]})
+
 cntr = 0
 
 for row in df_sub.iterrows():
@@ -182,11 +187,14 @@ for row in df_sub.iterrows():
     article_description = row[1]["description"]
     article_text = clean_article_text(row[1]["text"])
     article_url = row[1]["url"]
+    article_company_id = int(df_companies.loc[df_companies["name"]==row[1]["publisher"]]["id"])
+
     articles.append({"id": article_id, "datetime": article_date_time, \
                      "title": article_title, "description": article_description, \
-                     "text": article_text, "url": article_url})
+                     "text": article_text, "company_id": article_company_id, \
+                     "url": article_url})
+    
     all_article_keywords = row[1]["key_words"]
-
     for keyword in all_article_keywords:
         keyword = clean_key_word(keyword)
         if keyword not in keywords.values():
@@ -195,6 +203,16 @@ for row in df_sub.iterrows():
         else:
             keyword_id = list(keywords.values()).index(keyword)
         article_keyword.append({"article_id": article_id, "keyword_id": int(keyword_id)})
+    
+    all_article_categories = row[1]["content_channel"]
+    for category in all_article_categories:
+        category = category.strip()
+        if category not in categories.values():
+            category_id = len(categories)
+            categories[category_id] = category
+        else:
+            category_id = list(categories.values()).index(category)
+        article_category.append({"article_id": article_id, "category_id": int(category_id)})
 
     for main_author in row[1]["main_author"]:
         if main_author == "":
@@ -225,6 +243,8 @@ for row in df_sub.iterrows():
 df_articles = pd.DataFrame(articles)
 df_article_keyword = pd.DataFrame(article_keyword)
 df_keywords = pd.DataFrame({"id":keywords.keys(), "keyword":keywords.values()})
+df_article_category = pd.DataFrame(article_category)
+df_categories = pd.DataFrame({"id":categories.keys(), "category":categories.values()})
 df_authors["id"] = df_authors["id"].astype(int)
 df_article_author_role = pd.DataFrame(article_author_role)
 
@@ -233,9 +253,12 @@ df_article_author_role = pd.DataFrame(article_author_role)
 df_keywords.to_csv("../data/output/normalized/reuters/sample/keywords.csv")
 df_articles.to_csv("../data/output/normalized/reuters/sample/articles.csv")
 df_article_keyword.to_csv("../data/output/normalized/reuters/sample/article_keyword.csv")
+df_article_category.to_csv("../data/output/normalized/reuters/sample/article_category.csv")
+df_categories.to_csv("../data/output/normalized/reuters/sample/categories.csv")
 df_authors.to_csv("../data/output/normalized/reuters/sample/authors.csv")
 df_article_author_role.to_csv("../data/output/normalized/reuters/sample/article_author_role.csv")
 df_roles.to_csv("../data/output/normalized/reuters/sample/roles.csv")
+df_companies.to_csv("../data/output/normalized/reuters/sample/companies.csv")
 
 
 # %%

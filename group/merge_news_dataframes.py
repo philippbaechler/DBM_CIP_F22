@@ -31,8 +31,7 @@ df_reuters = pd.read_csv("../data/output/reuters_dirty.csv", index_col=0, \
 
 df_reuters["article_date_time"] = pd.to_datetime(df_reuters["article_date_time"])
 df_reuters = df_reuters[df_reuters["article_date_time"].notnull()]
-df_reuters = df_reuters.rename(columns={ })
-df_reuters["publisher"] = "Thomson and Reuters"
+df_reuters["publisher"] = "Thompson and Reuters"
 df_reuters.head(3)
 
 
