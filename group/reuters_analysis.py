@@ -90,35 +90,3 @@ plt.legend(["Trump", "Biden", "Obama"])
 plt.ylabel("Percentage of Articles")
 plt.savefig("trumpBidenObama.pdf")
 
-
-# %%
-plt.figure(figsize=FIG_DIM)
-
-df_occurences = get_occurences_per_month(df_reuters, "Bitcoin")
-plt.plot(df_occurences["year_month"], df_occurences["occurences"]/number_of_articles_per_month["number_of_articles"])
-
-df_occurences = get_occurences_per_month(df_reuters, "Tesla")
-plt.plot(df_occurences["year_month"], df_occurences["occurences"]/number_of_articles_per_month["number_of_articles"])
-
-df_occurences = get_occurences_per_month(df_reuters, "Twitter")
-plt.plot(df_occurences["year_month"], df_occurences["occurences"]/number_of_articles_per_month["number_of_articles"])
-
-df_occurences = get_occurences_per_month(df_reuters, "Google")
-plt.plot(df_occurences["year_month"], df_occurences["occurences"]/number_of_articles_per_month["number_of_articles"])
-
-df_occurences = get_occurences_per_month(df_reuters, "Facebook")
-plt.plot(df_occurences["year_month"], df_occurences["occurences"]/number_of_articles_per_month["number_of_articles"])
-
-df_occurences = get_occurences_per_month(df_reuters, "Microsoft")
-plt.plot(df_occurences["year_month"], df_occurences["occurences"]/number_of_articles_per_month["number_of_articles"])
-
-df_occurences = get_occurences_per_month(df_reuters, "Apple")
-plt.plot(df_occurences["year_month"], df_occurences["occurences"]/number_of_articles_per_month["number_of_articles"])
-
-
-plt.legend(["Bitcoin", "Tesla", "Twitter", "Google", "Facebook", "Microsoft", "Apple"])
-plt.ylabel("Percentage of Articles")
-plt.savefig("techCompanies.pdf")
-
-
-
