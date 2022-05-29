@@ -250,15 +250,15 @@ df_article_author_role = pd.DataFrame(article_author_role)
 
 
 # %%
-df_keywords.to_csv("../data/output/normalized/reuters/sample/keywords.csv")
-df_articles.to_csv("../data/output/normalized/reuters/sample/articles.csv")
-df_article_keyword.to_csv("../data/output/normalized/reuters/sample/article_keyword.csv")
-df_article_category.to_csv("../data/output/normalized/reuters/sample/article_category.csv")
-df_categories.to_csv("../data/output/normalized/reuters/sample/categories.csv")
-df_authors.to_csv("../data/output/normalized/reuters/sample/authors.csv")
-df_article_author_role.to_csv("../data/output/normalized/reuters/sample/article_author_role.csv")
-df_roles.to_csv("../data/output/normalized/reuters/sample/roles.csv")
-df_companies.to_csv("../data/output/normalized/reuters/sample/companies.csv")
+df_keywords.to_csv("../data/output/normalized/keywords.csv")
+df_articles.to_csv("../data/output/normalized/articles.csv")
+df_article_keyword.to_csv("../data/output/normalized/article_keyword.csv")
+df_article_category.to_csv("../data/output/normalized/article_category.csv")
+df_categories.to_csv("../data/output/normalized/categories.csv")
+df_authors.to_csv("../data/output/normalized/authors.csv")
+df_article_author_role.to_csv("../data/output/normalized/article_author_role.csv")
+df_roles.to_csv("../data/output/normalized/roles.csv")
+df_companies.to_csv("../data/output/normalized/companies.csv")
 
 
 # %%

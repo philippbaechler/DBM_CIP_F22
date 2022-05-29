@@ -24,11 +24,13 @@ import sqlalchemy
 
 
 # %% load data frame
-df_article_author = pd.read_csv("../data/output/normalized/article_author.csv", index_col=0)
+df_article_author_role = pd.read_csv("../data/output/normalized/article_author_role.csv", index_col=0)
+df_article_category = pd.read_csv("../data/output/normalized/article_category.csv", index_col=0)
 df_article_keyword = pd.read_csv("../data/output/normalized/article_keyword.csv", index_col=0)
 df_articles = pd.read_csv("../data/output/normalized/articles.csv", index_col=0)
-df_author_role = pd.read_csv("../data/output/normalized/author_role.csv", index_col=0)
 df_authors = pd.read_csv("../data/output/normalized/authors.csv", index_col=0)
+df_categories = pd.read_csv("../data/output/normalized/categories.csv", index_col=0)
+df_companies = pd.read_csv("../data/output/normalized/companies.csv", index_col=0)
 df_keywords = pd.read_csv("../data/output/normalized/keywords.csv", index_col=0)
 df_roles = pd.read_csv("../data/output/normalized/roles.csv", index_col=0)
 
@@ -48,7 +50,10 @@ def push_df_to_mysql_table(data_frame, table_name):
 
 
 # %%
-push_df_to_mysql_table(df_article_author, "article_author_t")
+push_df_to_mysql_table(df_article_author_role, "article_author_role_t")
+
+# %%
+push_df_to_mysql_table(df_article_category, "article_category_t")
 
 # %%
 push_df_to_mysql_table(df_article_keyword, "article_keyword_t")
@@ -57,10 +62,13 @@ push_df_to_mysql_table(df_article_keyword, "article_keyword_t")
 push_df_to_mysql_table(df_articles, "articles_t")
 
 # %%
-push_df_to_mysql_table(df_author_role, "author_role_t")
+push_df_to_mysql_table(df_authors, "authors_t")
 
 # %%
-push_df_to_mysql_table(df_authors, "authors_t")
+push_df_to_mysql_table(df_categories, "categories_t")
+
+# %%
+push_df_to_mysql_table(df_companies, "companies_t")
 
 # %%
 push_df_to_mysql_table(df_keywords, "keywords_t")
