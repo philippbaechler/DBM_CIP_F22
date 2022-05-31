@@ -99,7 +99,11 @@ fix_name_dict = {"Roberta Rampton Susan Cornwell": "Roberta Rampton, Susan Cornw
                  "Suleiman Al-Khalidi Nandita Bose": "Suleiman Al-Khalidi, Nandita Bose",
                  "Maju Samuel Aditya Soni": "Maju Samuel, Aditya Soni",
                  "Bryan Woolston Kacper Pempel": "Bryan Woolston, Kacper Pempel",
-                 "Susanne Neumayer-Remter Tanya Wood Petra Wischgoll": "Susanne Neumayer-Remter, Tanya Wood, Petra Wischgoll"}
+                 "Susanne Neumayer-Remter Tanya Wood Petra Wischgoll": "Susanne Neumayer-Remter, Tanya Wood, Petra Wischgoll",
+                 "Caroline Stauffer Matthew Lewis": "Caroline Stauffer, Matthew Lewis",
+                 "Sybille de La Hamaide": "Sybille de la Hamaide",
+                 "Christophe Van Der Perre": "Christophe Van der Perre",
+                 "Sri Kalyani Manojna Maddipatla": "Sri Kalyani, Manojna Maddipatla"}
 
 
 # %%
