@@ -120,4 +120,84 @@ CREATE OR REPLACE VIEW percentage_articles_mention_biden_v as (
 SELECT * FROM percentage_articles_mention_biden_v;
 
 
+## Calculate the percentage of articles in which Putin was mentioned.
+CREATE OR REPLACE VIEW percentage_articles_mention_putin_v as (
+	SELECT
+		concat(a.year, "-", a.month) as date, (a.putin_count / b.total_count) as percent_articles
+	FROM (
+		SELECT YEAR(articles.datetime) as year, MONTH(articles.datetime) as month, COUNT(articles.id) as putin_count
+		FROM articles_t articles
+		WHERE articles.text LIKE "%Putin%"
+		GROUP BY YEAR(articles.datetime), MONTH(articles.datetime)
+	) AS a, (
+		SELECT YEAR(articles.datetime) as year, MONTH(articles.datetime) as month, COUNT(articles.id) as total_count
+		FROM articles_t articles
+		GROUP BY YEAR(articles.datetime), MONTH(articles.datetime)
+	) AS b
+	WHERE a.year = b.year AND a.month = b.month
+);
+
+SELECT * FROM percentage_articles_mention_putin_v;
+
+
+## Calculate the percentage of articles in which war was mentioned.
+CREATE OR REPLACE VIEW percentage_articles_mention_war_v as (
+	SELECT
+		concat(a.year, "-", a.month) as date, (a.war_count / b.total_count) as percent_articles
+	FROM (
+		SELECT YEAR(articles.datetime) as year, MONTH(articles.datetime) as month, COUNT(articles.id) as war_count
+		FROM articles_t articles
+		WHERE articles.text LIKE "%war%"
+		GROUP BY YEAR(articles.datetime), MONTH(articles.datetime)
+	) AS a, (
+		SELECT YEAR(articles.datetime) as year, MONTH(articles.datetime) as month, COUNT(articles.id) as total_count
+		FROM articles_t articles
+		GROUP BY YEAR(articles.datetime), MONTH(articles.datetime)
+	) AS b
+	WHERE a.year = b.year AND a.month = b.month
+);
+
+SELECT * FROM percentage_articles_mention_war_v;
+
+
+## Calculate the percentage of articles in which climate was mentioned.
+CREATE OR REPLACE VIEW percentage_articles_mention_climate_v as (
+	SELECT
+		concat(a.year, "-", a.month) as date, (a.climate_count / b.total_count) as percent_articles
+	FROM (
+		SELECT YEAR(articles.datetime) as year, MONTH(articles.datetime) as month, COUNT(articles.id) as climate_count
+		FROM articles_t articles
+		WHERE articles.text LIKE "%climate%"
+		GROUP BY YEAR(articles.datetime), MONTH(articles.datetime)
+	) AS a, (
+		SELECT YEAR(articles.datetime) as year, MONTH(articles.datetime) as month, COUNT(articles.id) as total_count
+		FROM articles_t articles
+		GROUP BY YEAR(articles.datetime), MONTH(articles.datetime)
+	) AS b
+	WHERE a.year = b.year AND a.month = b.month
+);
+
+SELECT * FROM percentage_articles_mention_climate_v;
+
+
+## Calculate the percentage of articles in which virus was mentioned.
+CREATE OR REPLACE VIEW percentage_articles_mention_virus_v as (
+	SELECT
+		concat(a.year, "-", a.month) as date, (a.virus_count / b.total_count) as percent_articles
+	FROM (
+		SELECT YEAR(articles.datetime) as year, MONTH(articles.datetime) as month, COUNT(articles.id) as virus_count
+		FROM articles_t articles
+		WHERE articles.text LIKE "%virus%"
+		GROUP BY YEAR(articles.datetime), MONTH(articles.datetime)
+	) AS a, (
+		SELECT YEAR(articles.datetime) as year, MONTH(articles.datetime) as month, COUNT(articles.id) as total_count
+		FROM articles_t articles
+		GROUP BY YEAR(articles.datetime), MONTH(articles.datetime)
+	) AS b
+	WHERE a.year = b.year AND a.month = b.month
+);
+
+SELECT * FROM percentage_articles_mention_virus_v;
+
+
 
