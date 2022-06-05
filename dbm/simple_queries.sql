@@ -202,62 +202,98 @@ SELECT * FROM percentage_articles_mention_virus_v;
 
 ## Calculate the percentage of articles in which bitcoin was mentioned.
 CREATE OR REPLACE VIEW percentage_articles_mention_bitcoin_v as (
-	SELECT
-		concat(a.year, "-", a.month) as date, (a.bitcoin_count / b.total_count) as percent_articles
+	SELECT 
+		a.date, IFNULL(b.bitcoin_count, "0") / c.total_count as percent_articles
 	FROM (
-		SELECT YEAR(articles.datetime) as year, MONTH(articles.datetime) as month, COUNT(articles.id) as bitcoin_count
-		FROM articles_t articles
-		WHERE articles.text LIKE "%bitcoin%"
-		GROUP BY YEAR(articles.datetime), MONTH(articles.datetime)
-	) AS a, (
-		SELECT YEAR(articles.datetime) as year, MONTH(articles.datetime) as month, COUNT(articles.id) as total_count
-		FROM articles_t articles
-		GROUP BY YEAR(articles.datetime), MONTH(articles.datetime)
-	) AS b
-	WHERE a.year = b.year AND a.month = b.month
+		SELECT concat(YEAR(art.datetime), "-", MONTH(art.datetime)) as date
+		FROM articles_t art
+		GROUP BY YEAR(art.datetime), MONTH(art.datetime)
+	) as a
+	LEFT JOIN (
+		SELECT art.id as id, concat(YEAR(art.datetime), "-", MONTH(art.datetime)) as date, COUNT(art.id) as bitcoin_count
+		FROM articles_t art
+		WHERE LOWER(art.text) LIKE "%bitcoin%"
+		GROUP BY YEAR(art.datetime), MONTH(art.datetime)
+	) as b
+	ON (a.date = b.date), (
+		SELECT concat(YEAR(art.datetime), "-", MONTH(art.datetime)) as date, COUNT(art.id) as total_count
+		FROM articles_t art
+		GROUP BY YEAR(art.datetime), MONTH(art.datetime)
+	) as c
+	WHERE a.date=c.date
 );
 
 SELECT * FROM percentage_articles_mention_bitcoin_v;
 
+## Create table from view
+DROP TABLE if exists percentage_articles_mention_bitcoin_t;
+CREATE TABLE percentage_articles_mention_bitcoin_t as SELECT * FROM percentage_articles_mention_bitcoin_v;
+
 
 ## Calculate the percentage of articles in which ether was mentioned.
 CREATE OR REPLACE VIEW percentage_articles_mention_ether_v as (
-	SELECT
-		concat(a.year, "-", a.month) as date, (a.ether_count / b.total_count) as percent_articles
+	SELECT 
+		a.date, IFNULL(b.ether_count, "0") / c.total_count as percent_articles
 	FROM (
-		SELECT YEAR(articles.datetime) as year, MONTH(articles.datetime) as month, COUNT(articles.id) as ether_count
-		FROM articles_t articles
-		WHERE articles.text LIKE "%ether%"
-		GROUP BY YEAR(articles.datetime), MONTH(articles.datetime)
-	) AS a, (
-		SELECT YEAR(articles.datetime) as year, MONTH(articles.datetime) as month, COUNT(articles.id) as total_count
-		FROM articles_t articles
-		GROUP BY YEAR(articles.datetime), MONTH(articles.datetime)
-	) AS b
-	WHERE a.year = b.year AND a.month = b.month
+		SELECT concat(YEAR(art.datetime), "-", MONTH(art.datetime)) as date
+		FROM articles_t art
+		GROUP BY YEAR(art.datetime), MONTH(art.datetime)
+	) as a
+	LEFT JOIN (
+		SELECT art.id as id, concat(YEAR(art.datetime), "-", MONTH(art.datetime)) as date, COUNT(art.id) as ether_count
+		FROM articles_t art
+		WHERE LOWER(art.text) LIKE "% ether%"
+		GROUP BY YEAR(art.datetime), MONTH(art.datetime)
+	) as b
+	ON (a.date = b.date), (
+		SELECT concat(YEAR(art.datetime), "-", MONTH(art.datetime)) as date, COUNT(art.id) as total_count
+		FROM articles_t art
+		GROUP BY YEAR(art.datetime), MONTH(art.datetime)
+	) as c
+	WHERE a.date=c.date
 );
 
 SELECT * FROM percentage_articles_mention_ether_v;
 
+## Create table from view
+DROP TABLE if exists percentage_articles_mention_ether_t;
+CREATE TABLE percentage_articles_mention_ether_t as SELECT * FROM percentage_articles_mention_ether_v;
+
 
 ## Calculate the percentage of articles in which crypto was mentioned.
 CREATE OR REPLACE VIEW percentage_articles_mention_crypto_v as (
-	SELECT
-		concat(a.year, "-", a.month) as date, (a.crypto_count / b.total_count) as percent_articles
+	SELECT 
+		a.date, IFNULL(b.crypto_count, "0") / c.total_count as percent_articles
 	FROM (
-		SELECT YEAR(articles.datetime) as year, MONTH(articles.datetime) as month, COUNT(articles.id) as crypto_count
-		FROM articles_t articles
-		WHERE articles.text LIKE "%crypto%"
-		GROUP BY YEAR(articles.datetime), MONTH(articles.datetime)
-	) AS a, (
-		SELECT YEAR(articles.datetime) as year, MONTH(articles.datetime) as month, COUNT(articles.id) as total_count
-		FROM articles_t articles
-		GROUP BY YEAR(articles.datetime), MONTH(articles.datetime)
-	) AS b
-	WHERE a.year = b.year AND a.month = b.month
+		SELECT concat(YEAR(art.datetime), "-", MONTH(art.datetime)) as date
+		FROM articles_t art
+		GROUP BY YEAR(art.datetime), MONTH(art.datetime)
+	) as a
+	LEFT JOIN (
+		SELECT art.id as id, concat(YEAR(art.datetime), "-", MONTH(art.datetime)) as date, COUNT(art.id) as crypto_count
+		FROM articles_t art
+		WHERE LOWER(art.text) LIKE LOWER("%Crypto%")
+		GROUP BY YEAR(art.datetime), MONTH(art.datetime)
+	) as b
+	ON (a.date = b.date), (
+		SELECT concat(YEAR(art.datetime), "-", MONTH(art.datetime)) as date, COUNT(art.id) as total_count
+		FROM articles_t art
+		GROUP BY YEAR(art.datetime), MONTH(art.datetime)
+	) as c
+	WHERE a.date=c.date
 );
 
 SELECT * FROM percentage_articles_mention_crypto_v;
+
+## Create table from view
+DROP TABLE if exists percentage_articles_mention_crypto_t;
+CREATE TABLE percentage_articles_mention_crypto_t as SELECT * FROM percentage_articles_mention_crypto_v;
+
+
+
+
+
+
 
 
 
